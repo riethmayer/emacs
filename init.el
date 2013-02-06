@@ -1,9 +1,38 @@
-;; package
+;; package system
 ;; see https://github.com/technomancy/emacs-starter-kit
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (package-initialize)
+
+;; my packages
+
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+;; Add in your own as you wish:
+(defvar my-packages '(starter-kit 
+                      starter-kit-ruby 
+                      starter-kit-js 
+                      starter-kit-eshell
+                      magit
+                      yasnippet)
+  "A list of packages to ensure are installed at launch.")
+
+(dolist (p my-packages)
+  (when (not (package-installed-p p))
+    (package-install p)))
+
+(require 'yasnippet)
+(yas/load-directory "~/.emacs.d/snippets")
+(yas-global-mode 1)
+(add-hook 'prog-mode-hook
+          '(lambda ()
+             (yas-minor-mode)))
+
+
+(require 'magit)
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; my defaults
 (setq inhibit-startup-message t)
@@ -65,7 +94,7 @@
 (run-with-idle-timer 0.1 nil 'ns-toggle-fullscreen)
 (server-force-delete)
 (server-start)
-
+(set-face-font 'default "-apple-mensch-medium-r-normal--14-0-72-72-m-0-iso10646-1")
 ;; (setq-default indent-tabs-mode nil)
 ;; (column-number-mode 1)
 ;; (ido-mode 1)
