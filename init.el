@@ -18,8 +18,6 @@
 (global-subword-mode 1)
 (menu-bar-mode 0)
 (tool-bar-mode -1)
-(setq make-backup-files nil)
-(setq auto-save-default nil)
 
 ;; my functions
 
@@ -27,6 +25,15 @@
   "Recompile .emacs.d"
   (interactive)
   (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
+
+(defun indent-buffer ()
+  "indent whole buffer"
+  (interactive)
+  (whitespace-cleanup)
+  (indent-region (point-min) (point-max) nil)
+  (untabify (point-min) (point-max)))
+(global-set-key (kbd "C-c n") 'indent-buffer)
+
 
 ;; start server and fullscreen
 (run-with-idle-timer 0.1 nil 'ns-toggle-fullscreen)
