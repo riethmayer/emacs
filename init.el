@@ -11,11 +11,10 @@
   (package-refresh-contents))
 
 ;; Add in your own as you wish:
-(defvar my-packages '(starter-kit 
-                      starter-kit-ruby 
-                      starter-kit-js 
+(defvar my-packages '(starter-kit
+                      starter-kit-ruby
+                      starter-kit-js
                       starter-kit-eshell
-                      magit
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
 
@@ -89,12 +88,14 @@
 
 ;; my modes
 (recentf-mode)
+(global-whitespace-mode 1)
 
 ;; start server and fullscreen
 (run-with-idle-timer 0.1 nil 'ns-toggle-fullscreen)
 (server-force-delete)
 (server-start)
-(set-face-font 'default "-apple-mensch-medium-r-normal--14-0-72-72-m-0-iso10646-1")
+(set-face-font 'default "-apple-mensch-medium-r-normal--18-0-72-72-m-0-iso10646-1")
 ;; (setq-default indent-tabs-mode nil)
 ;; (column-number-mode 1)
 ;; (ido-mode 1)
+(load-theme 'tango-dark)
