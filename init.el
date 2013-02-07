@@ -29,11 +29,8 @@
           '(lambda ()
              (yas-minor-mode)))
 
-
-(require 'magit)
-(global-set-key (kbd "C-x g") 'magit-status)
-
 ;; my defaults
+(toggle-debug-on-error 1)
 (setq inhibit-startup-message t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (delete-selection-mode t)
@@ -68,6 +65,7 @@
 (global-set-key (kbd "M-n") 'ns-toggle-fullscreen)
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
+(global-set-key (kbd "C-x g") 'magit-status)
 
 (setq visible-bell 1)
 
