@@ -97,3 +97,5 @@
 ;; (column-number-mode 1)
 ;; (ido-mode 1)
 (load-theme 'tango-dark)
+(eval-after-load "magit"
+   '(set-face-attribute 'magit-item-highlight nil :foreground "#ffffff" :background "#3f4747"))
