@@ -1,0 +1,9 @@
+* Emacs configuration
+
+Based on https://github.com/technomancy/emacs-starter-kit.
+Removing el-get going back to built in package system.
+
+* Requires Mensch Font
+
+I really love this font :)
+http://robey.lag.net/2010/06/21/mensch-font.html
