@@ -12,9 +12,10 @@
 
 ;; Add in your own as you wish:
 (defvar my-packages '(starter-kit
-                      starter-kit-ruby
                       starter-kit-js
                       starter-kit-eshell
+                      textmate
+                      exec-path-from-shell
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
 
@@ -28,7 +29,10 @@
 (add-hook 'prog-mode-hook
           '(lambda ()
              (yas-minor-mode)))
+(require 'textmate)
 
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
 ;; my defaults
 (toggle-debug-on-error 1)
 (setq inhibit-startup-message t)
@@ -66,6 +70,8 @@
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "<f5>") 'textmate-goto-file)
+(global-set-key (kbd "<f6>") 'textmate-goto-symbol)
 
 (setq visible-bell 1)
 
@@ -98,4 +104,4 @@
 ;; (ido-mode 1)
 (load-theme 'tango-dark)
 (eval-after-load "magit"
-   '(set-face-attribute 'magit-item-highlight nil :foreground "#ffffff" :background "#3f4747"))
+  '(set-face-attribute 'magit-item-highlight nil :foreground "#ffffff" :background "#3f4747"))
