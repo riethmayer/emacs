@@ -1,4 +1,4 @@
 # -*- mode: snippet -*-
 # name: mock
 # --
-let(:$1) { mock }
+let(:$1) { $2 }$0
