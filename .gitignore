@@ -6,3 +6,5 @@ elpa
 backups
 places
 eshell
+tramp
+url/cookies
