@@ -31,8 +31,6 @@
              (yas-minor-mode)))
 (require 'textmate)
 
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
 ;; my defaults
 (toggle-debug-on-error 1)
 (setq inhibit-startup-message t)
@@ -50,11 +48,12 @@
 
 ;; my keys
 
-(setq mac-option-key-is-meta nil
-      mac-command-key-is-meta t
-      mac-command-modifier 'meta
-      mac-option-modifier 'super
-      mac-pass-command-to-system nil)
+;; unlearning meta key for windows
+;;(setq mac-option-key-is-meta nil
+;;      mac-command-key-is-meta t
+;;      mac-command-modifier 'meta
+;;      mac-option-modifier 'super
+;;      mac-pass-command-to-system nil)
 
 (global-set-key (kbd "C-x \\") 'align-regexp)
 (global-set-key "\C-s" 'isearch-forward-regexp)
@@ -94,11 +93,18 @@
 (recentf-mode)
 (global-whitespace-mode 1)
 
-;; start server and fullscreen
-(run-with-idle-timer 0.1 nil 'ns-toggle-fullscreen)
+;; start server
+
 (server-force-delete)
 (server-start)
-(set-face-font 'default "-apple-mensch-medium-r-normal--18-0-72-72-m-0-iso10646-1")
+
+;; cocoa specifics
+(when (memq window-system '(mac ns))
+  (set-face-attribute 'default nil :font "Mensch-18")
+  (run-with-idle-timer 0.1 nil 'ns-toggle-fullscreen)
+  (exec-path-from-shell-initialize))
+
+;; (set-face-font 'default "-apple-mensch-medium-r-normal--14-0-72-72-m-0-iso10646-1")
 ;; (setq-default indent-tabs-mode nil)
 ;; (column-number-mode 1)
 ;; (ido-mode 1)
