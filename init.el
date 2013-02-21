@@ -100,7 +100,7 @@
 
 ;; cocoa specifics
 (when (memq window-system '(mac ns))
-  (set-face-attribute 'default nil :font "Mensch-18")
+  (set-face-attribute 'default nil :font "Menlo-18")
   (run-with-idle-timer 0.1 nil 'ns-toggle-fullscreen)
   (exec-path-from-shell-initialize))
 
