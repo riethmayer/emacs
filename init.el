@@ -23,6 +23,9 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
+(add-to-list 'load-path "~/.emacs.d/vendor")
+(require 'rcodetools)
+
 (require 'yasnippet)
 (yas/load-directory "~/.emacs.d/snippets")
 (yas-global-mode 1)
@@ -69,8 +72,12 @@
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "<f5>") 'textmate-goto-file)
-(global-set-key (kbd "<f6>") 'textmate-goto-symbol)
+(global-set-key (kbd "s-t") 'textmate-goto-file)
+(global-set-key (kbd "s-T") 'textmate-goto-symbol)
+(global-set-key (kbd "s-=") 'text-scale-increase)
+(global-set-key (kbd "s--") 'text-scale-decrease)
+(define-key ruby-mode-map (kbd "C-c C-c") 'xmp)
+
 
 (setq visible-bell 1)
 
@@ -100,7 +107,7 @@
 
 ;; cocoa specifics
 (when (memq window-system '(mac ns))
-  (set-face-attribute 'default nil :font "Menlo-18")
+  (set-face-attribute 'default nil :font "Menlo-14")
   (run-with-idle-timer 0.1 nil 'ns-toggle-fullscreen)
   (exec-path-from-shell-initialize))
 
