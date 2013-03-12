@@ -14,8 +14,8 @@
 (defvar my-packages '(starter-kit
                       starter-kit-js
                       starter-kit-eshell
-                      textmate
                       exec-path-from-shell
+                      projectile
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
 
@@ -29,7 +29,6 @@
 (add-hook 'prog-mode-hook
           '(lambda ()
              (yas-minor-mode)))
-(require 'textmate)
 
 ;; my defaults
 (toggle-debug-on-error 1)
@@ -69,14 +68,13 @@
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "<f5>") 'textmate-goto-file)
-(global-set-key (kbd "<f6>") 'textmate-goto-symbol)
+(global-set-key (kbd "<f5>") 'projectile-find-file)
 
 (setq visible-bell 1)
 
 ;; my functions
 
-(defun recompile ()
+(defun recompile-emacs ()
   "Recompile .emacs.d"
   (interactive)
   (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
@@ -89,6 +87,18 @@
   (untabify (point-min) (point-max)))
 (global-set-key (kbd "C-c n") 'indent-buffer)
 
+(projectile-global-mode)
+
+;; apply modes for filenames
+
+(add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Rakefile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Gemfile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Capfile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Vagrantfile$" . ruby-mode))
+
 ;; my modes
 (recentf-mode)
 (global-whitespace-mode 1)
@@ -100,7 +110,7 @@
 
 ;; cocoa specifics
 (when (memq window-system '(mac ns))
-  (set-face-attribute 'default nil :font "Menlo-18")
+  (set-face-attribute 'default nil :font "Menlo-20")
   (run-with-idle-timer 0.1 nil 'ns-toggle-fullscreen)
   (exec-path-from-shell-initialize))
 
@@ -111,3 +121,16 @@
 (load-theme 'tango-dark)
 (eval-after-load "magit"
   '(set-face-attribute 'magit-item-highlight nil :foreground "#ffffff" :background "#3f4747"))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(debug-on-error t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(cursor ((t (:background "Magenta" :foreground "Black"))))
+ '(hl-line ((t (:inherit highlight :foreground "Black")))))
