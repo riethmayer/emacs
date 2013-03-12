@@ -23,6 +23,9 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
+(add-to-list 'load-path "~/.emacs.d/vendor")
+;; (require 'rcodetools)
+
 (require 'yasnippet)
 (yas/load-directory "~/.emacs.d/snippets")
 (yas-global-mode 1)
@@ -69,6 +72,9 @@
 (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "<f5>") 'projectile-find-file)
+(global-set-key (kbd "s-=") 'text-scale-increase)
+(global-set-key (kbd "s--") 'text-scale-decrease)
+;; (define-key ruby-mode-map (kbd "C-c C-c") 'xmp)
 
 (setq visible-bell 1)
 
