@@ -29,7 +29,7 @@
       (insert "=>")
     ad-do-it))
 ;; To remove this advice.
-;; (progn (ad-disable-advice 'comment-dwim 'around 'rct-hack) (ad-update 'comment-dwim)) 
+;; (progn (ad-disable-advice 'comment-dwim 'around 'rct-hack) (ad-update 'comment-dwim))
 
 (defun rct-current-line ()
   "Return the vertical position of point..."
@@ -54,7 +54,7 @@
      (if current-prefix-arg
          (setq rct-option-local
                (read-from-minibuffer "rcodetools option: " option nil nil 'rct-option-history))
-       option))))  
+       option))))
 
 (defun rct-shell-command (command &optional buffer)
   "Replacement for `(shell-command-on-region (point-min) (point-max) command buffer t' because of encoding problem."
@@ -118,27 +118,27 @@ See also `rct-interactive', `rct-complete-symbol--normal', and `rct-complete-sym
 See also `rct-interactive'."
   (interactive (rct-interactive))
   (let ((end (point)) beg
-	pattern alist
-	completion)
+        pattern alist
+        completion)
     (setq completion (rct-try-completion)) ; set also pattern / completion
     (save-excursion
       (search-backward pattern)
       (setq beg (point)))
     (cond ((eq completion t)            ;sole completion
            (message "%s" "Sole completion"))
-	  ((null completion)            ;no completions
-	   (message "Can't find completion for \"%s\"" pattern)
-	   (ding))
-	  ((not (string= pattern completion)) ;partial completion
+          ((null completion)            ;no completions
+           (message "Can't find completion for \"%s\"" pattern)
+           (ding))
+          ((not (string= pattern completion)) ;partial completion
            (delete-region beg end)      ;delete word
-	   (insert completion)
+           (insert completion)
            (message ""))
-	  (t
-	   (message "Making completion list...")
-	   (with-output-to-temp-buffer "*Completions*"
-	     (display-completion-list
-	      (all-completions pattern alist)))
-	   (message "Making completion list...%s" "done")))))
+          (t
+           (message "Making completion list...")
+           (with-output-to-temp-buffer "*Completions*"
+             (display-completion-list
+              (all-completions pattern alist)))
+           (message "Making completion list...%s" "done")))))
 
 ;; (define-key ruby-mode-map "\M-\C-i" 'rct-complete-symbol)
 
@@ -282,149 +282,149 @@ It is nothing but an indicator."
   (require 'ruby-mode)
   (require 'el-mock nil t)
   (expectations
-    (desc "comment-dwim advice")
-    (expect "# =>"
-      (with-temp-buffer
-        (ruby-mode)
-        (setq last-command nil)
-        (call-interactively 'comment-dwim)
-        (setq last-command 'comment-dwim)
-        (call-interactively 'comment-dwim)
-        (buffer-string)))
-    (expect (regexp "^1 +# =>")
-      (with-temp-buffer
-        (ruby-mode)
-        (insert "1")
-        (setq last-command nil)
-        (call-interactively 'comment-dwim)
-        (setq last-command 'comment-dwim)
-        (call-interactively 'comment-dwim)
-        (buffer-string)))
+   (desc "comment-dwim advice")
+   (expect "# =>"
+           (with-temp-buffer
+             (ruby-mode)
+             (setq last-command nil)
+             (call-interactively 'comment-dwim)
+             (setq last-command 'comment-dwim)
+             (call-interactively 'comment-dwim)
+             (buffer-string)))
+   (expect (regexp "^1 +# =>")
+           (with-temp-buffer
+             (ruby-mode)
+             (insert "1")
+             (setq last-command nil)
+             (call-interactively 'comment-dwim)
+             (setq last-command 'comment-dwim)
+             (call-interactively 'comment-dwim)
+             (buffer-string)))
 
-    (desc "rct-current-line")
-    (expect 1
-      (with-temp-buffer
-        (rct-current-line)))
-    (expect 1
-      (with-temp-buffer
-        (insert "1")
-        (rct-current-line)))
-    (expect 2
-      (with-temp-buffer
-        (insert "1\n")
-        (rct-current-line)))
-    (expect 2
-      (with-temp-buffer
-        (insert "1\n2")
-        (rct-current-line)))
+   (desc "rct-current-line")
+   (expect 1
+           (with-temp-buffer
+             (rct-current-line)))
+   (expect 1
+           (with-temp-buffer
+             (insert "1")
+             (rct-current-line)))
+   (expect 2
+           (with-temp-buffer
+             (insert "1\n")
+             (rct-current-line)))
+   (expect 2
+           (with-temp-buffer
+             (insert "1\n2")
+             (rct-current-line)))
 
-    (desc "rct-save-position")
-    (expect (mock (set-window-start * 7) => nil)
-      (stub window-start => 7)
-      (with-temp-buffer
-        (insert "abcdef\nghi")
-        (rct-save-position #'ignore)))
-    (expect 2
-      (with-temp-buffer
-        (stub window-start => 1)
-        (stub set-window-start => nil)
-        (insert "abcdef\nghi")
-        (rct-save-position #'ignore)
-        (rct-current-line)))
-    (expect 3
-      (with-temp-buffer
-        (stub window-start => 1)
-        (stub set-window-start => nil)
-        (insert "abcdef\nghi")
-        (rct-save-position #'ignore)
-        (current-column)))
+   (desc "rct-save-position")
+   (expect (mock (set-window-start * 7) => nil)
+           (stub window-start => 7)
+           (with-temp-buffer
+             (insert "abcdef\nghi")
+             (rct-save-position #'ignore)))
+   (expect 2
+           (with-temp-buffer
+             (stub window-start => 1)
+             (stub set-window-start => nil)
+             (insert "abcdef\nghi")
+             (rct-save-position #'ignore)
+             (rct-current-line)))
+   (expect 3
+           (with-temp-buffer
+             (stub window-start => 1)
+             (stub set-window-start => nil)
+             (insert "abcdef\nghi")
+             (rct-save-position #'ignore)
+             (current-column)))
 
-    (desc "rct-interactive")
-    (expect '("read")
-      (let ((current-prefix-arg t))
-        (stub read-from-minibuffer => "read")
-        (rct-interactive)))
-    (expect '("-S ruby19")
-      (let ((current-prefix-arg nil)
-            (rct-option-local "-S ruby19"))
-        (stub read-from-minibuffer => "read")
-        (rct-interactive)))
-    (expect '("")
-      (let ((current-prefix-arg nil)
-            (rct-option-local))
-        (stub read-from-minibuffer => "read")
-        (rct-interactive)))
+   (desc "rct-interactive")
+   (expect '("read")
+           (let ((current-prefix-arg t))
+             (stub read-from-minibuffer => "read")
+             (rct-interactive)))
+   (expect '("-S ruby19")
+           (let ((current-prefix-arg nil)
+                 (rct-option-local "-S ruby19"))
+             (stub read-from-minibuffer => "read")
+             (rct-interactive)))
+   (expect '("")
+           (let ((current-prefix-arg nil)
+                 (rct-option-local))
+             (stub read-from-minibuffer => "read")
+             (rct-interactive)))
 
-    (desc "rct-shell-command")
-    (expect "1+1 # => 2\n"
-      (with-temp-buffer
-        (insert "1+1 # =>\n")
-        (rct-shell-command "xmpfilter")
-        (buffer-string)))
+   (desc "rct-shell-command")
+   (expect "1+1 # => 2\n"
+           (with-temp-buffer
+             (insert "1+1 # =>\n")
+             (rct-shell-command "xmpfilter")
+             (buffer-string)))
 
-    (desc "xmp")
+   (desc "xmp")
 
-    (desc "xmpfilter-command")
-    (expect "xmpfilter --rails"
-      (let ((xmpfilter-command-name "xmpfilter"))
-        (with-temp-buffer
-          (insert "class TestFoo < Test::Unit::TestCase\n")
-          (xmpfilter-command "--rails"))))
-    (expect "xmpfilter "
-      (let ((xmpfilter-command-name "xmpfilter"))
-        (with-temp-buffer
-          (insert "context 'foo' do\n")
-          (xmpfilter-command))))
-    (expect "xmpfilter "
-      (let ((xmpfilter-command-name "xmpfilter"))
-        (with-temp-buffer
-          (insert "describe Array do\n")
-          (xmpfilter-command))))
-    (expect "xmpfilter --unittest --rails"
-      (let ((xmpfilter-command-name "xmpfilter"))
-        (with-temp-buffer
-          (insert "class TestFoo < Test::Unit::TestCase\n"
-                  "  def test_0\n"
-                  "    1 + 1 # =>\n"
-                  "  end\n"
-                  "end\n")
-          (xmpfilter-command "--rails"))))
-    (expect "xmpfilter --spec "
-      (let ((xmpfilter-command-name "xmpfilter"))
-        (with-temp-buffer
-          (insert "context 'foo' do\n"
-                  "  specify \"foo\" do\n"
-                  "    1 + 1 # =>\n"
-                  "  end\n"
-                  "end\n")
-          (xmpfilter-command))))
-    (expect "xmpfilter --spec "
-      (let ((xmpfilter-command-name "xmpfilter"))
-        (with-temp-buffer
-          (insert "describe Array do\n"
-                  "  it \"foo\" do\n"
-                  "    [1] + [1] # =>\n"
-                  "  end\n"
-                  "end\n")
-          (xmpfilter-command))))
-    (expect "xmpfilter "
-      (let ((xmpfilter-command-name "xmpfilter"))
-        (with-temp-buffer
-          (insert "1 + 2\n")
-          (xmpfilter-command))))
+   (desc "xmpfilter-command")
+   (expect "xmpfilter --rails"
+           (let ((xmpfilter-command-name "xmpfilter"))
+             (with-temp-buffer
+               (insert "class TestFoo < Test::Unit::TestCase\n")
+               (xmpfilter-command "--rails"))))
+   (expect "xmpfilter "
+           (let ((xmpfilter-command-name "xmpfilter"))
+             (with-temp-buffer
+               (insert "context 'foo' do\n")
+               (xmpfilter-command))))
+   (expect "xmpfilter "
+           (let ((xmpfilter-command-name "xmpfilter"))
+             (with-temp-buffer
+               (insert "describe Array do\n")
+               (xmpfilter-command))))
+   (expect "xmpfilter --unittest --rails"
+           (let ((xmpfilter-command-name "xmpfilter"))
+             (with-temp-buffer
+               (insert "class TestFoo < Test::Unit::TestCase\n"
+                       "  def test_0\n"
+                       "    1 + 1 # =>\n"
+                       "  end\n"
+                       "end\n")
+               (xmpfilter-command "--rails"))))
+   (expect "xmpfilter --spec "
+           (let ((xmpfilter-command-name "xmpfilter"))
+             (with-temp-buffer
+               (insert "context 'foo' do\n"
+                       "  specify \"foo\" do\n"
+                       "    1 + 1 # =>\n"
+                       "  end\n"
+                       "end\n")
+               (xmpfilter-command))))
+   (expect "xmpfilter --spec "
+           (let ((xmpfilter-command-name "xmpfilter"))
+             (with-temp-buffer
+               (insert "describe Array do\n"
+                       "  it \"foo\" do\n"
+                       "    [1] + [1] # =>\n"
+                       "  end\n"
+                       "end\n")
+               (xmpfilter-command))))
+   (expect "xmpfilter "
+           (let ((xmpfilter-command-name "xmpfilter"))
+             (with-temp-buffer
+               (insert "1 + 2\n")
+               (xmpfilter-command))))
 
-    (desc "rct-fork")
-    (expect t
-      (stub start-process-shell-command => t)
-      (stub interrupt-process => t)
-      (rct-fork "-r activesupport")
-      rct-fork-minor-mode)
-    (expect nil
-      (stub start-process-shell-command => t)
-      (stub interrupt-process => t)
-      (rct-fork "-r activesupport")
-      (rct-fork-kill)
-      rct-fork-minor-mode)
-    ))
+   (desc "rct-fork")
+   (expect t
+           (stub start-process-shell-command => t)
+           (stub interrupt-process => t)
+           (rct-fork "-r activesupport")
+           rct-fork-minor-mode)
+   (expect nil
+           (stub start-process-shell-command => t)
+           (stub interrupt-process => t)
+           (rct-fork "-r activesupport")
+           (rct-fork-kill)
+           rct-fork-minor-mode)
+   ))
 
 (provide 'rcodetools)
