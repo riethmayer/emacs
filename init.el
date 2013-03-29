@@ -16,6 +16,7 @@
                       starter-kit-eshell
                       exec-path-from-shell
                       projectile
+                      ack-and-a-half
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
 
@@ -24,7 +25,7 @@
     (package-install p)))
 
 (add-to-list 'load-path "~/.emacs.d/vendor")
-;; (require 'rcodetools)
+(require 'rcodetools)
 
 (require 'yasnippet)
 (yas/load-directory "~/.emacs.d/snippets")
@@ -72,9 +73,15 @@
 (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "<f5>") 'projectile-find-file)
+(global-set-key (kbd "<f6>") 'projectile-ack)
 (global-set-key (kbd "s-=") 'text-scale-increase)
 (global-set-key (kbd "s--") 'text-scale-decrease)
-;; (define-key ruby-mode-map (kbd "C-c C-c") 'xmp)
+
+(eval-after-load 'ruby-mode
+  '(progn
+     (define-key ruby-mode-map (kbd "M-/") 'comment-dwim)
+     (define-key ruby-mode-map (kbd "C-c C-c") 'xmp)))
+
 
 (setq visible-bell 1)
 
@@ -104,6 +111,7 @@
 (add-to-list 'auto-mode-alist '("Gemfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Capfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Vagrantfile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Guardfile$" . ruby-mode))
 
 ;; my modes
 (recentf-mode)
@@ -124,9 +132,9 @@
 ;; (setq-default indent-tabs-mode nil)
 ;; (column-number-mode 1)
 ;; (ido-mode 1)
-(load-theme 'tango-dark)
-(eval-after-load "magit"
-  '(set-face-attribute 'magit-item-highlight nil :foreground "#ffffff" :background "#3f4747"))
+;; (load-theme 'tango-dark)
+;; (eval-after-load "magit"
+;;   '(set-face-attribute 'magit-item-highlight nil :foreground "#ffffff" :background "#3f4747"))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
