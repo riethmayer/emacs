@@ -17,6 +17,7 @@
                       exec-path-from-shell
                       projectile
                       ack-and-a-half
+                      rvm
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
 
@@ -25,7 +26,6 @@
     (package-install p)))
 
 (add-to-list 'load-path "~/.emacs.d/vendor")
-(require 'rcodetools)
 
 (require 'yasnippet)
 (yas/load-directory "~/.emacs.d/snippets")
@@ -76,12 +76,15 @@
 (global-set-key (kbd "<f6>") 'projectile-ack)
 (global-set-key (kbd "s-=") 'text-scale-increase)
 (global-set-key (kbd "s--") 'text-scale-decrease)
+(global-unset-key (kbd "s-m"))
 
 (eval-after-load 'ruby-mode
   '(progn
+     (rvm-use-default)
+     (require 'rcodetools)
      (define-key ruby-mode-map (kbd "M-/") 'comment-dwim)
+     (define-key ruby-mode-map (kbd "TAB") 'smart-tab)
      (define-key ruby-mode-map (kbd "C-c C-c") 'xmp)))
-
 
 (setq visible-bell 1)
 
@@ -145,8 +148,6 @@
             (unless (yas/expand)
               (dabbrev-expand nil)))
         (indent-for-tab-command)))))
-
-(global-set-key [(tab)] 'smart-tab)
 
 ;; (set-face-font 'default "-apple-mensch-medium-r-normal--14-0-72-72-m-0-iso10646-1")
 ;; (setq-default indent-tabs-mode nil)
