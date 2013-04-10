@@ -18,6 +18,7 @@
                       projectile
                       ack-and-a-half
                       rvm
+                      feature-mode
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
 
