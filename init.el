@@ -19,6 +19,9 @@
                       ack-and-a-half
                       rvm
                       feature-mode
+                      puppet-mode
+                      coffee-mode
+                      zenburn-theme
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
 
@@ -29,7 +32,7 @@
 (add-to-list 'load-path "~/.emacs.d/vendor")
 
 (require 'yasnippet)
-(yas/load-directory "~/.emacs.d/snippets")
+(yas-load-directory "~/.emacs.d/snippets")
 (yas-global-mode 1)
 (add-hook 'prog-mode-hook
           '(lambda ()
@@ -145,8 +148,8 @@
         (indent-region (region-beginning)
                        (region-end))
       (if (looking-at "\\_>")
-          (let ((yas/fallback-behavior nil))
-            (unless (yas/expand)
+          (let ((yas-fallback-behavior nil))
+            (unless (yas-expand)
               (dabbrev-expand nil)))
         (indent-for-tab-command)))))
 
@@ -162,6 +165,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes (quote ("9f443833deb3412a34d2d2c912247349d4bd1b09e0f5eaba11a3ea7872892000" default)))
  '(debug-on-error t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -169,4 +173,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(cursor ((t (:background "Magenta" :foreground "Black"))))
- '(hl-line ((t (:inherit highlight :foreground "Black")))))
+ '(hl-line ((t (:inherit highlight :foreground "Black" :background "white")))))
