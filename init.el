@@ -3,6 +3,8 @@
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
 ;; my packages
@@ -22,6 +24,7 @@
                       puppet-mode
                       coffee-mode
                       zenburn-theme
+                      dash-at-point
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
 
@@ -152,6 +155,11 @@
             (unless (yas-expand)
               (dabbrev-expand nil)))
         (indent-for-tab-command)))))
+
+(add-to-list 'load-path "/path/to/dash-at-point")
+(autoload 'dash-at-point "dash-at-point"
+  "Search the word at point with Dash." t nil)
+(global-set-key "\C-cd" 'dash-at-point)
 
 ;; (set-face-font 'default "-apple-mensch-medium-r-normal--14-0-72-72-m-0-iso10646-1")
 ;; (setq-default indent-tabs-mode nil)
