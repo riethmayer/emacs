@@ -55,6 +55,7 @@
 (global-subword-mode 1)
 (menu-bar-mode 0)
 (tool-bar-mode -1)
+(column-number-mode 1)
 
 ;; my keys
 
@@ -122,6 +123,7 @@
 (add-to-list 'auto-mode-alist '("Capfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Vagrantfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Guardfile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
 
 ;; my modes
 (recentf-mode)
@@ -163,9 +165,8 @@
 
 ;; (set-face-font 'default "-apple-mensch-medium-r-normal--14-0-72-72-m-0-iso10646-1")
 ;; (setq-default indent-tabs-mode nil)
-;; (column-number-mode 1)
+
 ;; (ido-mode 1)
-;; (load-theme 'tango-dark)
 ;; (eval-after-load "magit"
 ;;   '(set-face-attribute 'magit-item-highlight nil :foreground "#ffffff" :background "#3f4747"))
 (custom-set-variables
@@ -182,4 +183,3 @@
  ;; If there is more than one, they won't work right.
  '(cursor ((t (:background "Magenta" :foreground "Black"))))
  '(hl-line ((t (:inherit highlight :foreground "Black" :background "white")))))
-(load-theme 'zenburn)
