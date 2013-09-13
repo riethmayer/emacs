@@ -87,6 +87,10 @@
 (global-set-key (kbd "s--") 'text-scale-decrease)
 (global-unset-key (kbd "s-m"))
 
+(setq tramp-default-method "ssh")
+(setq tramp-auto-save-directory "~/tmp/tramp/")
+(setq tramp-chunksize 2000)
+
 (eval-after-load 'ruby-mode
   '(progn
      (rvm-use-default)
