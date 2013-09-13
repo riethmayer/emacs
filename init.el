@@ -57,6 +57,8 @@
 (menu-bar-mode 0)
 (tool-bar-mode -1)
 (column-number-mode 1)
+;; (global-linum-mode 1)
+;; (setq linum-format "%d ")
 
 ;; my keys
 
