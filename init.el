@@ -79,7 +79,6 @@
 (global-set-key (kbd "C-c y") 'bury-buffer)
 (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "M-n") 'ns-toggle-fullscreen)
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key (kbd "C-x g") 'magit-status)
@@ -135,16 +134,14 @@
 ;; my modes
 (recentf-mode)
 (global-whitespace-mode 1)
-
+(auto-fill-mode 0)
 ;; start server
-
 (server-force-delete)
 (server-start)
 
 ;; cocoa specifics
 (when (memq window-system '(mac ns))
   (set-face-attribute 'default nil :font "Menlo-22")
-  (run-with-idle-timer 0.1 nil 'ns-toggle-fullscreen)
   (exec-path-from-shell-initialize))
 
 (defun smart-tab ()
