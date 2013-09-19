@@ -26,6 +26,7 @@
                       zenburn-theme
                       dash-at-point
                       monokai-theme
+                      plantuml-mode
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
 
@@ -42,6 +43,25 @@
           '(lambda ()
              (yas-minor-mode)))
 
+;; plantuml-mode
+(setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
+(eval-after-load "plantuml-mode"
+  '(progn
+     (defun plantuml-compile ()
+       "Run plantuml over current file and open the result png."
+       (interactive)
+       (let ((file buffer-file-name))
+         (shell-command (concat "java -jar '" plantuml-jar-path
+                                "' '" file "' -tpng"))
+         (display-buffer (find-file-noselect
+                          (concat (file-name-directory file)
+                                  (file-name-sans-extension
+                                   (file-name-nondirectory file))
+                                  ".png")))))
+
+     (let ((map (make-sparse-keymap)))
+       (define-key map "\C-c\C-c" 'plantuml-compile)
+       (setq plantuml-mode-map map))))
 ;; my defaults
 (toggle-debug-on-error 1)
 (setq inhibit-startup-message t)
@@ -130,6 +150,7 @@
 (add-to-list 'auto-mode-alist '("Vagrantfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Guardfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
+(add-to-list 'auto-mode-alist '("\\.uml$\\'" . plantuml-mode))
 
 ;; my modes
 (recentf-mode)
