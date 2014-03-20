@@ -32,6 +32,7 @@
                       clojure-test-mode
                       nrepl
                       cider
+                      plantuml-mode
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
 
@@ -48,6 +49,25 @@
           '(lambda ()
              (yas-minor-mode)))
 
+;; plantuml-mode
+(setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
+(eval-after-load "plantuml-mode"
+  '(progn
+     (defun plantuml-compile ()
+       "Run plantuml over current file and open the result png."
+       (interactive)
+       (let ((file buffer-file-name))
+         (shell-command (concat "java -jar '" plantuml-jar-path
+                                "' '" file "' -tpng"))
+         (display-buffer (find-file-noselect
+                          (concat (file-name-directory file)
+                                  (file-name-sans-extension
+                                   (file-name-nondirectory file))
+                                  ".png")))))
+
+     (let ((map (make-sparse-keymap)))
+       (define-key map "\C-c\C-c" 'plantuml-compile)
+       (setq plantuml-mode-map map))))
 ;; my defaults
 (toggle-debug-on-error 1)
 (setq inhibit-startup-message t)
@@ -62,6 +82,8 @@
 (menu-bar-mode 0)
 (tool-bar-mode -1)
 (column-number-mode 1)
+;; (global-linum-mode 1)
+;; (setq linum-format "%d ")
 
 ;; my keys
 
@@ -82,7 +104,6 @@
 (global-set-key (kbd "C-c y") 'bury-buffer)
 (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "M-n") 'ns-toggle-fullscreen)
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key (kbd "C-x g") 'magit-status)
@@ -91,6 +112,10 @@
 (global-set-key (kbd "s-=") 'text-scale-increase)
 (global-set-key (kbd "s--") 'text-scale-decrease)
 (global-unset-key (kbd "s-m"))
+
+(setq tramp-default-method "ssh")
+(setq tramp-auto-save-directory "~/tmp/tramp/")
+(setq tramp-chunksize 2000)
 
 (eval-after-load 'ruby-mode
   '(progn
@@ -130,20 +155,19 @@
 (add-to-list 'auto-mode-alist '("Vagrantfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Guardfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
+(add-to-list 'auto-mode-alist '("\\.uml$\\'" . plantuml-mode))
 
 ;; my modes
 (recentf-mode)
 (global-whitespace-mode 1)
-
+(auto-fill-mode 0)
 ;; start server
-
 (server-force-delete)
 (server-start)
 
 ;; cocoa specifics
 (when (memq window-system '(mac ns))
   (set-face-attribute 'default nil :font "Menlo-22")
-  (run-with-idle-timer 0.1 nil 'ns-toggle-fullscreen)
   (exec-path-from-shell-initialize))
 
 (defun smart-tab ()
@@ -182,11 +206,4 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes (quote ("fa189fcf5074d4964f0a53f58d17c7e360bb8f879bd968ec4a56dc36b0013d29" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "9f443833deb3412a34d2d2c912247349d4bd1b09e0f5eaba11a3ea7872892000" default)))
  '(debug-on-error t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(cursor ((t (:background "Magenta" :foreground "Black"))))
- '(hl-line ((t (:inherit highlight :foreground "Black" :background "white")))))
 (load-theme 'monokai)
