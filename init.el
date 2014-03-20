@@ -26,6 +26,12 @@
                       zenburn-theme
                       dash-at-point
                       monokai-theme
+                      starter-kit-lisp
+                      starter-kit-bindings
+                      clojure-mode
+                      clojure-test-mode
+                      nrepl
+                      cider
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
 
