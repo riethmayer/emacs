@@ -23,6 +23,7 @@
                       feature-mode
                       puppet-mode
                       coffee-mode
+                      markdown-mode
                       zenburn-theme
                       dash-at-point
                       monokai-theme
@@ -48,7 +49,6 @@
 (add-hook 'prog-mode-hook
           '(lambda ()
              (yas-minor-mode)))
-
 ;; plantuml-mode
 (setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
 (eval-after-load "plantuml-mode"
@@ -59,12 +59,10 @@
        (let ((file buffer-file-name))
          (shell-command (concat "java -jar '" plantuml-jar-path
                                 "' '" file "' -tpng"))
-         (display-buffer (find-file-noselect
-                          (concat (file-name-directory file)
-                                  (file-name-sans-extension
-                                   (file-name-nondirectory file))
-                                  ".png")))))
-
+         (shell-command (concat "open -a Preview " (concat (file-name-directory file)
+                                                 (file-name-sans-extension
+                                                  (file-name-nondirectory file))
+                                                 ".png")))))
      (let ((map (make-sparse-keymap)))
        (define-key map "\C-c\C-c" 'plantuml-compile)
        (setq plantuml-mode-map map))))
@@ -204,6 +202,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("fa189fcf5074d4964f0a53f58d17c7e360bb8f879bd968ec4a56dc36b0013d29" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "9f443833deb3412a34d2d2c912247349d4bd1b09e0f5eaba11a3ea7872892000" default)))
+ '(custom-safe-themes (quote ("60f04e478dedc16397353fb9f33f0d895ea3dab4f581307fbf0aa2f07e658a40" "fa189fcf5074d4964f0a53f58d17c7e360bb8f879bd968ec4a56dc36b0013d29" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "9f443833deb3412a34d2d2c912247349d4bd1b09e0f5eaba11a3ea7872892000" default)))
  '(debug-on-error t))
 (load-theme 'monokai)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
