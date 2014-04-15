@@ -21,6 +21,7 @@
                       ack-and-a-half
                       rvm
                       feature-mode
+                      sass-mode
                       puppet-mode
                       coffee-mode
                       markdown-mode
@@ -142,7 +143,7 @@
 (add-to-list 'auto-mode-alist '("Vagrantfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("Guardfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
-(add-to-list 'auto-mode-alist '("\\.uml$\\'" . plantuml-mode))
+(add-to-list 'auto-mode-alist '("\\.uml$" . plantuml-mode))
 
 ;; my modes
 (recentf-mode)
