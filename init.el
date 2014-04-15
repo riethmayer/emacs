@@ -23,9 +23,16 @@
                       feature-mode
                       puppet-mode
                       coffee-mode
+                      markdown-mode
                       zenburn-theme
                       dash-at-point
                       monokai-theme
+                      starter-kit-lisp
+                      starter-kit-bindings
+                      clojure-mode
+                      clojure-test-mode
+                      nrepl
+                      cider
                       plantuml-mode
                       yasnippet)
   "A list of packages to ensure are installed at launch.")
@@ -42,7 +49,6 @@
 (add-hook 'prog-mode-hook
           '(lambda ()
              (yas-minor-mode)))
-
 ;; plantuml-mode
 (setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
 (eval-after-load "plantuml-mode"
@@ -53,12 +59,10 @@
        (let ((file buffer-file-name))
          (shell-command (concat "java -jar '" plantuml-jar-path
                                 "' '" file "' -tpng"))
-         (display-buffer (find-file-noselect
-                          (concat (file-name-directory file)
-                                  (file-name-sans-extension
-                                   (file-name-nondirectory file))
-                                  ".png")))))
-
+         (shell-command (concat "open -a Preview " (concat (file-name-directory file)
+                                                 (file-name-sans-extension
+                                                  (file-name-nondirectory file))
+                                                 ".png")))))
      (let ((map (make-sparse-keymap)))
        (define-key map "\C-c\C-c" 'plantuml-compile)
        (setq plantuml-mode-map map))))
@@ -67,7 +71,6 @@
 (setq inhibit-startup-message t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (delete-selection-mode t)
-;; (scroll-bar-mode -1)
 (blink-cursor-mode t)
 (show-paren-mode t)
 (set-terminal-coding-system 'utf-8)
@@ -77,17 +80,6 @@
 (menu-bar-mode 0)
 (tool-bar-mode -1)
 (column-number-mode 1)
-;; (global-linum-mode 1)
-;; (setq linum-format "%d ")
-
-;; my keys
-
-;; unlearning meta key for windows
-;;(setq mac-option-key-is-meta nil
-;;      mac-command-key-is-meta t
-;;      mac-command-modifier 'meta
-;;      mac-option-modifier 'super
-;;      mac-pass-command-to-system nil)
 
 (global-set-key (kbd "C-x \\") 'align-regexp)
 (global-set-key "\C-s" 'isearch-forward-regexp)
@@ -188,17 +180,17 @@
   "Search the word at point with Dash." t nil)
 (global-set-key "\C-cd" 'dash-at-point)
 
-;; (set-face-font 'default "-apple-mensch-medium-r-normal--14-0-72-72-m-0-iso10646-1")
-;; (setq-default indent-tabs-mode nil)
-
-;; (ido-mode 1)
-;; (eval-after-load "magit"
-;;   '(set-face-attribute 'magit-item-highlight nil :foreground "#ffffff" :background "#3f4747"))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("fa189fcf5074d4964f0a53f58d17c7e360bb8f879bd968ec4a56dc36b0013d29" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "9f443833deb3412a34d2d2c912247349d4bd1b09e0f5eaba11a3ea7872892000" default)))
+ '(custom-safe-themes (quote ("60f04e478dedc16397353fb9f33f0d895ea3dab4f581307fbf0aa2f07e658a40" "fa189fcf5074d4964f0a53f58d17c7e360bb8f879bd968ec4a56dc36b0013d29" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "9f443833deb3412a34d2d2c912247349d4bd1b09e0f5eaba11a3ea7872892000" default)))
  '(debug-on-error t))
 (load-theme 'monokai)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
