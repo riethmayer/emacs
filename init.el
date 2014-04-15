@@ -67,7 +67,7 @@
 (setq inhibit-startup-message t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (delete-selection-mode t)
-(scroll-bar-mode -1)
+;; (scroll-bar-mode -1)
 (blink-cursor-mode t)
 (show-paren-mode t)
 (set-terminal-coding-system 'utf-8)
