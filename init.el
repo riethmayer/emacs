@@ -45,6 +45,9 @@
 
 (add-to-list 'load-path "~/.emacs.d/vendor")
 
+(require 'pbcopy)
+(turn-on-pbcopy)
+
 (require 'yasnippet)
 (yas-load-directory "~/.emacs.d/snippets")
 (yas-global-mode 1)
@@ -62,10 +65,10 @@
          (shell-command (concat "java -jar '" plantuml-jar-path
                                 "' '" file "' -tpng"))
          (shell-command (concat "open -a Preview "
-                          (concat (file-name-directory file)
-                                  (file-name-sans-extension
-                                   (file-name-nondirectory file))
-                                  ".png")))))
+                                (concat (file-name-directory file)
+                                        (file-name-sans-extension
+                                         (file-name-nondirectory file))
+                                        ".png")))))
 
      (let ((map (make-sparse-keymap)))
        (define-key map "\C-c\C-c" 'plantuml-compile)
@@ -85,6 +88,16 @@
 (tool-bar-mode -1)
 (column-number-mode 1)
 
+(defun kill-region-or-backward-kill-word (&optional arg region)
+  "`kill-region' if the region is active, otherwise `backward-kill-word'"
+  (interactive
+   (list (prefix-numeric-value current-prefix-arg) (use-region-p)))
+  (if region
+      (kill-region (region-beginning) (region-end))
+    (backward-kill-word arg)))
+(global-set-key (kbd "C-w") 'kill-region-or-backward-kill-word)
+
+
 (global-set-key (kbd "C-x \\") 'align-regexp)
 (global-set-key "\C-s" 'isearch-forward-regexp)
 (global-set-key "\C-r" 'isearch-backward-regexp)
@@ -95,8 +108,8 @@
 (global-set-key (kbd "C-c y") 'bury-buffer)
 (global-set-key (kbd "M-`") 'file-cache-minibuffer-complete)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key "\C-w" 'backward-kill-word)
-(global-set-key "\C-x\C-k" 'kill-region)
+
+;; (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "<f5>") 'projectile-find-file)
 (global-set-key (kbd "<f6>") 'projectile-ack)
