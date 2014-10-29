@@ -58,6 +58,7 @@
 (setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
 (eval-after-load "plantuml-mode"
   '(progn
+     (setq whitespace-line-column 250)
      (defun plantuml-compile ()
        "Run plantuml over current file and open the result png."
        (interactive)
@@ -127,7 +128,8 @@
      (require 'rcodetools)
      (define-key ruby-mode-map (kbd "M-/") 'comment-dwim)
      (define-key ruby-mode-map (kbd "TAB") 'smart-tab)
-     (define-key ruby-mode-map (kbd "C-c C-c") 'xmp)))
+     (define-key ruby-mode-map (kbd "<f7>") 'xmp)))
+
 
 (setq visible-bell 1)
 
@@ -165,6 +167,26 @@
 (recentf-mode)
 (global-whitespace-mode 1)
 (auto-fill-mode 0)
+(global-linum-mode 1)
+;; (setq linum-format "%d ")
+;; (setq linum-format "%4d \u2502")
+
+(unless window-system
+  (add-hook 'linum-before-numbering-hook
+            (lambda ()
+              (setq-local linum-format-fmt
+                          (let ((w (length (number-to-string
+                                            (count-lines (point-min) (point-max))))))
+                            (concat "%" (number-to-string w) "d"))))))
+
+(defun linum-format-func (line)
+  (concat
+   (propertize (format linum-format-fmt line) 'face 'linum)
+   (propertize " " 'face 'mode-line)))
+
+(unless window-system
+  (setq linum-format 'linum-format-func))
+
 ;; start server
 (server-force-delete)
 (server-start)
@@ -204,10 +226,10 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes (quote ("60f04e478dedc16397353fb9f33f0d895ea3dab4f581307fbf0aa2f07e658a40" "fa189fcf5074d4964f0a53f58d17c7e360bb8f879bd968ec4a56dc36b0013d29" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "9f443833deb3412a34d2d2c912247349d4bd1b09e0f5eaba11a3ea7872892000" default)))
  '(debug-on-error t))
-;; (load-theme 'monokai)
+(load-theme 'monokai)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(mode-line ((t (:background "color-235" :foreground "White" :box (:line-width -1 :style released-button))))))
