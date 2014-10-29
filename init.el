@@ -21,6 +21,7 @@
                       ack-and-a-half
                       rvm
                       feature-mode
+                      sass-mode
                       puppet-mode
                       coffee-mode
                       markdown-mode
