@@ -13,31 +13,32 @@
   (package-refresh-contents))
 
 ;; Add in your own as you wish:
-(defvar my-packages '(starter-kit
-                      starter-kit-js
-                      starter-kit-eshell
-                      exec-path-from-shell
-                      projectile
-                      ack-and-a-half
-                      rvm
-                      feature-mode
-                      sass-mode
-                      puppet-mode
-                      coffee-mode
-                      markdown-mode
-                      zenburn-theme
-                      dash-at-point
-                      monokai-theme
-                      starter-kit-lisp
-                      starter-kit-bindings
+(defvar my-packages '(ack-and-a-half
+                      cider
                       clojure-mode
                       clojure-test-mode
-                      nrepl
-                      cider
+                      coffee-mode
+                      dash-at-point
                       erlang
-                      plantuml-mode
+                      exec-path-from-shell
+                      feature-mode
                       markdown-mode
-                      yasnippet)
+                      markdown-mode
+                      monokai-theme
+                      nrepl
+                      plantuml-mode
+                      projectile
+                      puppet-mode
+                      rvm
+                      sass-mode
+                      smartparens
+                      starter-kit
+                      starter-kit-bindings
+                      starter-kit-eshell
+                      starter-kit-js
+                      starter-kit-lisp
+                      yasnippet
+                      zenburn-theme)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -81,7 +82,7 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (delete-selection-mode t)
 (blink-cursor-mode t)
-(show-paren-mode t)
+(show-smartparens-global-mode +1)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
@@ -183,7 +184,7 @@
 (defun linum-format-func (line)
   (concat
    (propertize (format linum-format-fmt line) 'face 'linum)
-   (propertize " " 'face 'mode-line)))
+   (propertize " " 'face 'mode-line-buffer-id)))
 
 (unless window-system
   (setq linum-format 'linum-format-func))
@@ -233,4 +234,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(mode-line ((t (:background "color-235" :foreground "White" :box (:line-width -1 :style released-button))))))
+ )
