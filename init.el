@@ -77,12 +77,20 @@
        (define-key map "\C-c\C-c" 'plantuml-compile)
        (setq plantuml-mode-map map))))
 ;; my defaults
+(setq-default tab-width 2)
+(setq-default indent-tabs-mode nil)
+(setq css-indent-offset 2)
+(setq-default sh-basic-offset 2)
+(setq-default sh-indentation 2)
+(setq-default js-indent-level 2)
+(setq-default python-indent 2)
 (toggle-debug-on-error 1)
 (setq inhibit-startup-message t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (delete-selection-mode t)
 (blink-cursor-mode t)
 (show-smartparens-global-mode +1)
+(show-paren-mode 0)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
@@ -169,7 +177,7 @@
 (recentf-mode)
 (global-whitespace-mode 1)
 (auto-fill-mode 0)
-(global-linum-mode 1)
+(global-linum-mode 0)
 ;; (setq linum-format "%d ")
 ;; (setq linum-format "%4d \u2502")
 
@@ -226,8 +234,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("60f04e478dedc16397353fb9f33f0d895ea3dab4f581307fbf0aa2f07e658a40" "fa189fcf5074d4964f0a53f58d17c7e360bb8f879bd968ec4a56dc36b0013d29" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "9f443833deb3412a34d2d2c912247349d4bd1b09e0f5eaba11a3ea7872892000" default)))
- '(debug-on-error t))
+ '(custom-safe-themes
+   (quote
+    ("aa0cff9f0399a01e35a884bebe67039e3f8890dbe69ebaaa6e8d307dce50dfcd" "60f04e478dedc16397353fb9f33f0d895ea3dab4f581307fbf0aa2f07e658a40" "fa189fcf5074d4964f0a53f58d17c7e360bb8f879bd968ec4a56dc36b0013d29" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "9f443833deb3412a34d2d2c912247349d4bd1b09e0f5eaba11a3ea7872892000" default)))
+ '(debug-on-error t)
+ '(magit-use-overlays nil))
 (load-theme 'monokai)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
