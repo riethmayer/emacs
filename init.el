@@ -49,6 +49,7 @@
 
 (require 'yasnippet)
 (yas-load-directory "~/.emacs.d/snippets")
+(setq yas-snippet-dirs '("~/.emacs.d/snippets"))
 (yas-global-mode 1)
 (add-hook 'prog-mode-hook
           '(lambda ()
