@@ -34,6 +34,7 @@
                       starter-kit-eshell
                       starter-kit-js
                       starter-kit-lisp
+                      yaml-mode
                       yasnippet
                       zenburn-theme)
   "A list of packages to ensure are installed at launch.")
