@@ -13,21 +13,25 @@
   (package-refresh-contents))
 
 ;; Add in your own as you wish:
-(defvar my-packages '(ack-and-a-half
+(defvar my-packages '(ag
                       cider
                       coffee-mode
                       dash-at-point
                       erlang
                       exec-path-from-shell
                       feature-mode
-                      markdown-mode
+                      handlebars-mode
+                      helm-ag
+                      helm-projectile
                       markdown-mode
                       monokai-theme
                       plantuml-mode
                       projectile
                       puppet-mode
+                      rainbow-mode
                       rvm
                       sass-mode
+                      scss-mode
                       smartparens
                       starter-kit
                       starter-kit-bindings
@@ -121,8 +125,8 @@
 
 ;; (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "<f5>") 'projectile-find-file)
-(global-set-key (kbd "<f6>") 'projectile-ack)
+(global-set-key (kbd "<f5>") 'helm-projectile)
+(global-set-key (kbd "<f6>") 'helm-projectile-ag)
 (global-set-key (kbd "s-=") 'text-scale-increase)
 (global-set-key (kbd "s--") 'text-scale-decrease)
 (global-unset-key (kbd "s-m"))
@@ -136,9 +140,9 @@
      (rvm-use-default)
      (require 'rcodetools)
      (define-key ruby-mode-map (kbd "M-/") 'comment-dwim)
-     (define-key ruby-mode-map (kbd "TAB") 'smart-tab)
-     (define-key ruby-mode-map (kbd "<f7>") 'xmp)))
+     (define-key ruby-mode-map (kbd "TAB") 'smart-tab)))
 
+(add-hook 'css-mode-hook 'rainbow-mode)
 
 (setq visible-bell 1)
 
@@ -171,6 +175,7 @@
 (add-to-list 'auto-mode-alist '("Guardfile$" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
 (add-to-list 'auto-mode-alist '("\\.plu$" . plantuml-mode))
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
 
 ;; my modes
 (recentf-mode)
@@ -223,10 +228,11 @@
               (dabbrev-expand nil)))
         (indent-for-tab-command)))))
 
-(add-to-list 'load-path "/path/to/dash-at-point")
-(autoload 'dash-at-point "dash-at-point"
-  "Search the word at point with Dash." t nil)
-(global-set-key "\C-cd" 'dash-at-point)
+;; helm and search
+
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
