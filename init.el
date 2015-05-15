@@ -12,6 +12,7 @@
 ;; Add in your own as you wish:
 (defvar my-packages '(ag
                       cider
+                      clojure-mode
                       coffee-mode
                       dash-at-point
                       erlang
