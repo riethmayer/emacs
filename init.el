@@ -30,6 +30,7 @@
                       rvm
                       sass-mode
                       scss-mode
+                      slime
                       smartparens
                       starter-kit
                       starter-kit-bindings
@@ -46,6 +47,15 @@
     (package-install p)))
 
 (add-to-list 'load-path "~/.emacs.d/vendor")
+
+;; Set your lisp system and, optionally, some contribs
+(setq inferior-lisp-program "/usr/local/bin/sbcl")
+(setq slime-contribs '(slime-fancy))
+
+(add-hook 'slime-mode-hook
+          (lambda ()
+            (unless (slime-connected-p)
+              (save-excursion (slime)))))
 
 (require 'pbcopy)
 (turn-on-pbcopy)
