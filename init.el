@@ -26,6 +26,7 @@
                       plantuml-mode
                       projectile
                       puppet-mode
+                      python-mode
                       rainbow-mode
                       rvm
                       sass-mode
@@ -101,7 +102,7 @@
 (setq-default sh-basic-offset 2)
 (setq-default sh-indentation 2)
 (setq-default js-indent-level 2)
-(setq-default python-indent 2)
+(setq-default python-indent 4)
 (toggle-debug-on-error 1)
 (setq inhibit-startup-message t)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -268,6 +269,7 @@
      port))))
  '(dired-listing-switches "-hla --group-directories-first")
  '(dired-use-ls-dired t)
+ '(python-indent-guess-indent-offset nil))
 ;;(load-theme 'monokai)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
