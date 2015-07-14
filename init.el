@@ -21,7 +21,7 @@
                       handlebars-mode
                       helm-ag
                       helm-projectile
-                      jedi-mode
+                      jedi
                       markdown-mode
                       monokai-theme
                       plantuml-mode
@@ -289,9 +289,9 @@
      (server :default "localhost")
      (database :default "core_production")
      port))))
- '(dired-listing-switches "-hla --group-directories-first")
- '(dired-use-ls-dired t)
- '(python-indent-guess-indent-offset nil))
+'(dired-listing-switches "-hla --group-directories-first")
+'(dired-use-ls-dired t)
+'(python-indent-guess-indent-offset nil)
 (load-theme 'monokai)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
