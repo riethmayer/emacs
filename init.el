@@ -16,6 +16,7 @@
                       coffee-mode
                       dash-at-point
                       erlang
+                      ess
                       exec-path-from-shell
                       feature-mode
                       handlebars-mode
@@ -23,8 +24,10 @@
                       helm-projectile
                       jedi
                       markdown-mode
+                      markdown-mode+
                       monokai-theme
                       plantuml-mode
+                      polymode
                       projectile
                       puppet-mode
                       python-mode
@@ -269,6 +272,49 @@
             (define-key python-mode-map (kbd "C-M-d") 'python-nav-up-list)
             ))
 (add-hook 'python-mode-hook 'jedi:setup)
+
+(defun rmd-mode ()
+  "ESS Markdown mode for rmd files"
+  (interactive)
+  ;;   (setq load-path
+  ;;    (append (list "path/to/polymode/" "path/to/polymode/modes/")
+  ;;         load-path))
+  (require 'poly-R)
+  (require 'poly-markdown)
+  (poly-markdown+r-mode))
+
+(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . rmd-mode))
+(add-to-list 'auto-mode-alist '("\\.rmd\\'" . rmd-mode))
+
+(defun rmarkdown-new-chunk (name)
+  "Insert a new R chunk."
+  (interactive "sChunk name: ")
+  (insert "\n```{r " name "}\n")
+  (save-excursion
+    (newline)
+    (insert "```\n")
+    (previous-line)))
+
+(defun rmarkdown-weave-file ()
+  "Run knitr on the current file and weave it as MD and HTML."
+  (interactive)
+  (shell-command
+   (format "knit.sh -c %s"
+           (shell-quote-argument (buffer-file-name)))))
+
+(defun rmarkdown-tangle-file ()
+  "Run knitr on the current file and tangle its R code."
+  (interactive)
+  (shell-command
+   (format "knit.sh -t %s"
+           (shell-quote-argument (buffer-file-name)))))
+
+(defun rmarkdown-preview-file ()
+  "Run knitr on the current file and display output in a browser."
+  (interactive)
+  (shell-command
+   (format "knit.sh -b %s"
+           (shell-quote-argument (buffer-file-name)))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
