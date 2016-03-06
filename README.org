@@ -1,4 +1,0 @@
-* Emacs configuration
-
-Based on https://github.com/technomancy/emacs-starter-kit.
-Removing el-get going back to built in package system.
