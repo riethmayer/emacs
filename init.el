@@ -41,6 +41,10 @@
   :ensure t)
 (use-package yasnippet
   :ensure t)
+(use-package dockerfile-mode
+  :init
+  (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+  :ensure t)
 
 (setq apropos-sort-by-scores t)
 (setq visible-bell 1)
@@ -66,6 +70,8 @@
 (menu-bar-mode 0)
 ;; (tool-bar-mode -1)
 (column-number-mode 1)
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-by-copying t)
 
 (defun kill-region-or-backward-kill-word (&optional arg region)
   "`kill-region' if the region is active, otherwise `backward-kill-word'"
@@ -117,7 +123,8 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
- '(custom-enabled-themes (quote (tango-dark))))
+ '(custom-enabled-themes (quote (tango-dark)))
+ '(safe-local-variable-values (quote ((docker-image-name . "rails")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
