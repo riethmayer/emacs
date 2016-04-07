@@ -85,7 +85,7 @@
 (delete-selection-mode t)
 (blink-cursor-mode t)
 ;; (show-smartparens-global-mode +1)
-(show-paren-mode 0)
+(show-paren-mode 1)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
@@ -122,6 +122,20 @@
 (global-set-key (kbd "s--") 'text-scale-decrease)
 (global-unset-key (kbd "s-m"))
 (add-hook 'css-mode-hook 'rainbow-mode)
+(global-set-key (kbd "M-/") 'hippie-expand)
+
+;; Lisp-friendly hippie expand
+(setq hippie-expand-try-functions-list
+      '(try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol))
+
+(require 'saveplace)
+(setq-default save-place t)
+;; keep track of saved places in ~/.emacs.d/places
+(setq save-place-file (concat user-emacs-directory "places"))
 
 (defun indent-buffer ()
   "indent whole buffer"
