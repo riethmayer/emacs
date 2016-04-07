@@ -15,6 +15,12 @@
   :ensure t)
 (use-package coffee-mode
   :ensure t)
+(use-package clojure-mode
+  :ensure t)
+(use-package clojure-mode-extra-font-locking
+  :ensure t)
+(use-package cider
+  :ensure t)
 (use-package dash-at-point
   :ensure t)
 (use-package handlebars-mode
@@ -23,19 +29,29 @@
   :ensure t)
 (use-package helm-projectile
   :ensure t)
+(use-package ido-ubiquitous
+  :ensure t)
 (use-package magit
   :ensure t)
 (use-package markdown-mode+
   :ensure t)
 (use-package markdown-preview-mode
   :ensure t)
+(use-package paredit
+  :ensure t)
 (use-package polymode
   :ensure t)
 (use-package projectile
   :ensure t)
+(use-package rainbow-delimiters
+  :ensure t)
 (use-package rainbow-mode
   :ensure t)
 (use-package smartparens
+  :ensure t)
+(use-package smex
+  :ensure t)
+(use-package tagedit
   :ensure t)
 (use-package yaml-mode
   :ensure t)
@@ -44,6 +60,13 @@
 (use-package dockerfile-mode
   :init
   (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+  :ensure t)
+(use-package ruby-mode
+  :init
+  (add-to-list 'auto-mode-alist
+               '("\\.\\(?:cap\\|gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist
+               '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|Procfile|[rR]akefile\\)\\'" . ruby-mode))
   :ensure t)
 
 (setq apropos-sort-by-scores t)
