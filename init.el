@@ -98,6 +98,7 @@
 (blink-cursor-mode t)
 ;; (show-smartparens-global-mode +1)
 (show-paren-mode 1)
+(recentf-mode 1)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
