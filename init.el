@@ -47,6 +47,8 @@
   (ido-mode 1)
   (setq ido-create-new-buffer 'always)
   :ensure t)
+(use-package less-css-mode
+  :ensure t)
 (use-package magit
   :init
   (global-set-key (kbd "C-x g") 'magit-status)
@@ -105,6 +107,20 @@
                '("\\.\\(?:cap\\|gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
   (add-to-list 'auto-mode-alist
                '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|Procfile|[rR]akefile\\)\\'" . ruby-mode))
+  :ensure t)
+(use-package web-mode
+  :init
+  (defun my-web-mode-hook ()
+    "Hooks for Web mode."
+    (setq web-mode-enable-engine-detection t)
+    (setq web-mode-markup-indent-offset 2)
+    (setq web-mode-css-indent-offset 2)
+    (setq web-mode-code-indent-offset 2)
+    (setq web-mode-enable-current-column-highlight t)
+    (setq web-mode-markup-indent-offset 2))
+  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-hook 'web-mode-hook  'my-web-mode-hook)
   :ensure t)
 
 ;; defaults
