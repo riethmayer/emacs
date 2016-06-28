@@ -25,6 +25,34 @@
   :ensure t)
 (use-package dash-at-point
   :ensure t)
+(use-package ess
+  :ensure t)
+(use-package exec-path-from-shell
+  :init
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize))
+  :ensure t)
+(use-package flycheck
+  :init
+  ;; http://www.flycheck.org/manual/latest/index.html
+  (require 'flycheck)
+  ;; turn on flychecking globally
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  ;; disable jshint since we prefer eslint checking
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers
+                        '(javascript-jshint)))
+  ;; use eslint with web-mode for jsx files
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  ;; customize flycheck temp file prefix
+  (setq-default flycheck-temp-prefix ".flycheck")
+
+  ;; disable json-jsonlist checking for json files
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers
+                        '(json-jsonlist)))
+
+  :ensure t)
 (use-package handlebars-mode
   :ensure t)
 (use-package helm-ag
@@ -47,6 +75,10 @@
   (ido-mode 1)
   (setq ido-create-new-buffer 'always)
   :ensure t)
+(use-package js2-mode
+  :ensure t)
+(use-package json-mode
+  :ensure t)
 (use-package less-css-mode
   :ensure t)
 (use-package magit
@@ -54,6 +86,11 @@
   (global-set-key (kbd "C-x g") 'magit-status)
   :ensure t)
 (use-package markdown-mode+
+  :init
+  (require 'poly-R)
+  (require 'poly-markdown)
+  (add-to-list 'auto-mode-alist
+               '("\\.\\(?:rmd\\|rmarkdown\\|RMD\\)\\'" . poly-markdown+r-mode))
   :ensure t)
 (use-package markdown-preview-mode
   :ensure t)
@@ -120,7 +157,15 @@
     (setq web-mode-markup-indent-offset 2))
   (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
   (add-hook 'web-mode-hook  'my-web-mode-hook)
+  ;; for better jsx syntax-highlighting in web-mode
+  ;; - courtesy of Patrick @halbtuerke
+  (defadvice web-mode-highlight-part (around tweak-jsx activate)
+    (if (equal web-mode-content-type "jsx")
+        (let ((web-mode-enable-part-face nil))
+          ad-do-it)
+      ad-do-it))
   :ensure t)
 
 ;; defaults
