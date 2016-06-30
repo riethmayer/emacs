@@ -158,6 +158,7 @@
   (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html.eex$" . web-mode))
   (add-hook 'web-mode-hook  'my-web-mode-hook)
   ;; for better jsx syntax-highlighting in web-mode
   ;; - courtesy of Patrick @halbtuerke
@@ -182,7 +183,8 @@
 (setq css-indent-offset 2)
 (setq sql-indent-offset 2)
 (setq inhibit-startup-message t)
-(setq max-lisp-eval-depth 10000)
+(setq max-lisp-eval-depth 100000)
+(setq max-specpdl-size 100000)
 (setq debug-on-error t)
 (setq hippie-expand-try-functions-list
       '(try-expand-dabbrev
