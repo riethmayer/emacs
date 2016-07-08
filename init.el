@@ -14,6 +14,8 @@
 (use-package ag
   :ensure t)
 (use-package alchemist
+  :init
+  (setq alchemist-mix-env "dev")
   :ensure t)
 (use-package coffee-mode
   :ensure t)
