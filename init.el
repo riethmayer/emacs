@@ -1,4 +1,4 @@
-;; installations via packages
+;;; installations via packages
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
@@ -16,6 +16,8 @@
 (use-package alchemist
   :init
   (setq alchemist-mix-env "dev")
+  (setq alchemist-goto-elixir-source-dir "~/github/elixir/")
+  (setq alchemist-goto-erlang-source-dir "~/github/otp/")
   :ensure t)
 (use-package coffee-mode
   :ensure t)
@@ -103,6 +105,33 @@
 (use-package projectile
   :init
   (projectile-global-mode)
+  :ensure t)
+(use-package puml-mode
+  :init
+  (setq puml-plantuml-jar-path "/Users/riethmayer/bin/plantuml.jar")
+  (add-to-list 'auto-mode-alist '("\\.puml\\'" . puml-mode))
+  (add-to-list 'auto-mode-alist '("\\.plu\\'" . puml-mode))
+  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . puml-mode))
+  (setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
+  (eval-after-load "puml-mode"
+    '(progn
+       (setq whitespace-line-column 250)
+       (defun puml-compile ()
+         "Run plantuml over current file and open the result png."
+         (interactive)
+         (let ((file buffer-file-name))
+           (shell-command (concat "java -jar '" plantuml-jar-path
+                                  "' '" file "' -tpng"))
+           (shell-command (concat "open -a Preview "
+                                  (concat (file-name-directory file)
+                                          (file-name-sans-extension
+                                           (file-name-nondirectory file))
+                                          ".png")))))
+
+       (let ((map (make-sparse-keymap)))
+         (define-key map "\C-c\C-c" 'puml-preview)
+         (define-key map "\C-c\C-i" 'puml-compile)
+         (setq puml-mode-map map))))
   :ensure t)
 (use-package rainbow-delimiters
   :ensure t)
@@ -209,6 +238,14 @@
 (delete-selection-mode t)
 (toggle-debug-on-error 1)
 
+(add-hook 'find-file-hook 'find-file-check-line-endings)
+(defun dos-file-endings-p ()
+  (string-match "dos" (symbol-name buffer-file-coding-system)))
+(defun find-file-check-line-endings ()
+  (when (dos-file-endings-p)
+    (set-buffer-file-coding-system 'undecided-unix)
+    (set-buffer-modified-p nil)))
+
 ;; functions
 (defun kill-region-or-backward-kill-word (&optional arg region)
   "`kill-region' if the region is active, otherwise `backward-kill-word'"
@@ -263,7 +300,7 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
- '(custom-enabled-themes (quote (tango-dark)))
+ ;; '(custom-enabled-themes (quote (tango-dark)))
  '(safe-local-variable-values (quote ((docker-image-name . "rails")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
