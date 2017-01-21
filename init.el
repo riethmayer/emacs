@@ -19,6 +19,10 @@
   (setq alchemist-goto-elixir-source-dir "~/github/elixir/")
   (setq alchemist-goto-erlang-source-dir "~/github/otp/")
   :ensure t)
+(use-package ansible
+  :init
+  (add-hook 'yaml-mode-hook '(lambda () (ansible 1)))
+  :ensure t)
 (use-package coffee-mode
   :ensure t)
 (use-package clojure-mode
@@ -27,7 +31,37 @@
   :ensure t)
 (use-package cider
   :ensure t)
+(use-package company
+  :init
+  (add-hook 'after-init-hook 'global-company-mode)
+  :ensure t)
+(use-package company-ansible
+  :init
+  (add-to-list 'company-backends 'company-ansible)
+  :ensure t)
+(use-package company-inf-ruby
+  :init
+  (add-to-list 'company-backends 'company-inf-ruby)
+  :ensure t)
+(use-package company-jedi
+  :init
+  (add-to-list 'company-backends 'company-jedi)
+  :ensure t)
+(use-package company-web
+  :init
+  (add-to-list 'company-backends 'company-web-html)
+  (add-to-list 'company-backends 'company-web-jade)
+  (add-to-list 'company-backends 'company-web-slim)
+  :ensure t)
 (use-package dash-at-point
+  :ensure t)
+(use-package docker
+  :ensure t)
+(use-package dockerfile-mode
+  :init
+  (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+  :ensure t)
+(use-package docker-tramp
   :ensure t)
 (use-package ess
   :ensure t)
@@ -35,6 +69,8 @@
   :init
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize))
+  :ensure t)
+(use-package feature-mode
   :ensure t)
 (use-package flycheck
   :init
@@ -79,7 +115,7 @@
   (ido-mode 1)
   (setq ido-create-new-buffer 'always)
   :ensure t)
-(use-package js2-mode
+(use-package jinja2-mode
   :ensure t)
 (use-package json-mode
   :ensure t)
@@ -98,6 +134,17 @@
   :ensure t)
 (use-package markdown-preview-mode
   :ensure t)
+(use-package monokai-theme
+  :init
+  (load-theme 'monokai t)
+  :ensure t)
+(use-package mwim
+  :init
+  (global-set-key (kbd "C-a") 'mwim-beginning-of-code-or-line)
+  (global-set-key (kbd "C-e") 'mwim-end-of-code-or-line)
+  :ensure t)
+(use-package nginx-mode
+  :ensure t)
 (use-package paredit
   :ensure t)
 (use-package polymode
@@ -105,6 +152,8 @@
 (use-package projectile
   :init
   (projectile-global-mode)
+  :ensure t)
+(use-package projectile-rails
   :ensure t)
 (use-package puml-mode
   :init
@@ -157,6 +206,10 @@
   :ensure t)
 (use-package smex
   :ensure t)
+(use-package spray
+  :init
+  (global-set-key (kbd "<f8>") 'spray-mode)
+  :ensure t)
 (use-package tagedit
   :ensure t)
 (use-package yaml-mode
@@ -165,10 +218,6 @@
   :init
   (yas-global-mode)
   :ensure t)
-(use-package dockerfile-mode
-  :init
-  (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
-  :ensure t)
 (use-package ruby-mode
   :init
   (add-to-list 'auto-mode-alist
@@ -176,29 +225,60 @@
   (add-to-list 'auto-mode-alist
                '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|Procfile|[rR]akefile\\)\\'" . ruby-mode))
   :ensure t)
+(use-package terraform-mode
+  :ensure t)
 (use-package web-mode
   :init
-  (defun my-web-mode-hook ()
-    "Hooks for Web mode."
-    (setq web-mode-enable-engine-detection t)
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-css-indent-offset 2)
-    (setq web-mode-code-indent-offset 2)
-    (setq web-mode-enable-current-column-highlight t)
-    (setq web-mode-markup-indent-offset 2))
-  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html.eex$" . web-mode))
-  (add-hook 'web-mode-hook  'my-web-mode-hook)
-  ;; for better jsx syntax-highlighting in web-mode
-  ;; - courtesy of Patrick @halbtuerke
+  (setq-default
+   web-mode-code-indent-offset 2
+   web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")
+                                  ("javascript" . "\\.es6?\\'"))
+   web-mode-css-indent-offset 2
+   web-mode-enable-auto-pairing t
+   web-mode-enable-css-colorization t
+   web-mode-markup-indent-offset 2
+   web-mode-engines-alist '(("blade"  . "\\.blade\\.")))
+
+  (add-to-list 'auto-mode-alist '("\\.css\\'"    . web-mode))       ;; CSS
+  (add-to-list 'auto-mode-alist '("\\.erb\\'"   . web-mode))        ;; ERB
+  (add-to-list 'auto-mode-alist '("\\.es6\\'"    . web-mode))       ;; ES6
+  (add-to-list 'auto-mode-alist '("\\.html?\\'"  . web-mode))       ;; Plain HTML
+  (add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))       ;; JS + JSX
+  (add-to-list 'auto-mode-alist '("\\.scss\\'"   . web-mode))       ;; SCSS
+  (add-to-list 'auto-mode-alist '("\\.erb\\'"    . web-mode))       ;; ERB
+
   (defadvice web-mode-highlight-part (around tweak-jsx activate)
     (if (equal web-mode-content-type "jsx")
         (let ((web-mode-enable-part-face nil))
           ad-do-it)
       ad-do-it))
+
+  (defadvice web-mode-highlight-part (around tweak-jsx activate)
+    (if (equal web-mode-content-type "js")
+        (let ((web-mode-enable-part-face nil))
+          ad-do-it)
+      ad-do-it))
+
+  (with-eval-after-load 'flycheck
+    (setq-default flycheck-disabled-checkers
+                  (append flycheck-disabled-checkers
+                          '(javascript-jshint)))
+    (flycheck-add-mode 'javascript-eslint 'web-mode))
   :ensure t)
+
+(defun endless/fill-or-unfill ()
+  "Like `fill-paragraph', but unfill if used twice."
+  (interactive)
+  (let ((fill-column
+         (if (eq last-command 'endless/fill-or-unfill)
+             (progn (setq this-command nil)
+                    (point-max))
+           fill-column)))
+    (call-interactively #'fill-paragraph)))
+
+(global-set-key [remap fill-paragraph]
+                #'endless/fill-or-unfill)
+;; TODO
 
 ;; defaults
 (setq-default tab-width 2)
@@ -292,7 +372,6 @@
 (global-set-key (kbd "C-c n") 'indent-buffer)
 (global-set-key (kbd "C-x p") 'prev-window)
 (global-unset-key (kbd "s-m"))
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -300,7 +379,15 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
- ;; '(custom-enabled-themes (quote (tango-dark)))
+ '(ansi-color-names-vector
+   ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
+ '(custom-safe-themes
+   (quote
+    ("4156d0da4d9b715c6f7244be34f2622716fb563d185b6facedca2c0985751334" default)))
+ '(hl-sexp-background-color "#efebe9")
+ '(package-selected-packages
+   (quote
+    (monokai-theme leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters puml-mode projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
  '(safe-local-variable-values (quote ((docker-image-name . "rails")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
