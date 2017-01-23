@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: fc
+# --
+import React from 'react';
+
+const $1 = (${2:props}) => {
+  return (<${3:br}>);
+}
+
+export default $1;

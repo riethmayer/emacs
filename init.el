@@ -120,6 +120,8 @@
 (use-package json-mode
   :ensure t)
 (use-package less-css-mode
+  :init
+    (add-to-list 'auto-mode-alist '("\\.css\\'"    . less-css-mode))
   :ensure t)
 (use-package magit
   :init
@@ -238,8 +240,6 @@
    web-mode-enable-css-colorization t
    web-mode-markup-indent-offset 2
    web-mode-engines-alist '(("blade"  . "\\.blade\\.")))
-
-  (add-to-list 'auto-mode-alist '("\\.css\\'"    . web-mode))       ;; CSS
   (add-to-list 'auto-mode-alist '("\\.erb\\'"   . web-mode))        ;; ERB
   (add-to-list 'auto-mode-alist '("\\.es6\\'"    . web-mode))       ;; ES6
   (add-to-list 'auto-mode-alist '("\\.html?\\'"  . web-mode))       ;; Plain HTML
