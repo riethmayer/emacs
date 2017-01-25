@@ -121,7 +121,7 @@
   :ensure t)
 (use-package less-css-mode
   :init
-    (add-to-list 'auto-mode-alist '("\\.css\\'"    . less-css-mode))
+  (add-to-list 'auto-mode-alist '("\\.css\\'"    . less-css-mode))
   :ensure t)
 (use-package magit
   :init
@@ -157,32 +157,14 @@
   :ensure t)
 (use-package projectile-rails
   :ensure t)
-(use-package puml-mode
+(use-package plantuml-mode
   :init
-  (setq puml-plantuml-jar-path "/Users/riethmayer/bin/plantuml.jar")
-  (add-to-list 'auto-mode-alist '("\\.puml\\'" . puml-mode))
-  (add-to-list 'auto-mode-alist '("\\.plu\\'" . puml-mode))
-  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . puml-mode))
+  (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
+  (add-to-list 'auto-mode-alist '("\\.plu\\'" . plantuml-mode))
+  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
   (setq plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
-  (eval-after-load "puml-mode"
-    '(progn
-       (setq whitespace-line-column 250)
-       (defun puml-compile ()
-         "Run plantuml over current file and open the result png."
-         (interactive)
-         (let ((file buffer-file-name))
-           (shell-command (concat "java -jar '" plantuml-jar-path
-                                  "' '" file "' -tpng"))
-           (shell-command (concat "open -a Preview "
-                                  (concat (file-name-directory file)
-                                          (file-name-sans-extension
-                                           (file-name-nondirectory file))
-                                          ".png")))))
-
-       (let ((map (make-sparse-keymap)))
-         (define-key map "\C-c\C-c" 'puml-preview)
-         (define-key map "\C-c\C-i" 'puml-compile)
-         (setq puml-mode-map map))))
+  (add-to-list
+   'org-src-lang-modes '("plantuml" . plantuml))
   :ensure t)
 (use-package rainbow-delimiters
   :ensure t)
@@ -387,7 +369,7 @@
  '(hl-sexp-background-color "#efebe9")
  '(package-selected-packages
    (quote
-    (monokai-theme leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters puml-mode projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
+    (monokai-theme leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters plantuml-mode projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
  '(safe-local-variable-values (quote ((docker-image-name . "rails")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
