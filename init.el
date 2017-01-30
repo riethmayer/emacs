@@ -186,7 +186,7 @@
   :ensure t)
 (use-package smartparens
   :init
-  (show-paren-mode)
+  (show-smartparens-global-mode t)
   :ensure t)
 (use-package smex
   :ensure t)
