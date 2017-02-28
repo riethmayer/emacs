@@ -3,7 +3,6 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
-
 (package-initialize)
 
 ;; Bootstrap `use-package'
@@ -174,7 +173,9 @@
   :ensure t)
 (use-package recentf
   :init
-  (recentf-mode)
+  (setq recentf-auto-cleanup 'never)
+  (setq recentf-max-menu-items 25)
+  (recentf-mode 1)
   (global-set-key (kbd "C-x f") 'recentf-open-files)
   :ensure t)
 (use-package saveplace
@@ -202,12 +203,25 @@
   :init
   (yas-global-mode)
   :ensure t)
+(use-package flymake-ruby
+  :init
+  (add-hook 'ruby-mode-hook 'flymake-ruby-load)
+  :ensure t)
 (use-package ruby-mode
   :init
   (add-to-list 'auto-mode-alist
                '("\\.\\(?:cap\\|gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
   (add-to-list 'auto-mode-alist
                '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|Procfile|[rR]akefile\\)\\'" . ruby-mode))
+  (setq ruby-deep-indent-paren nil)
+  :ensure t)
+(use-package gh
+  :ensure t)
+(use-package gist
+  :ensure t)
+(use-package rvm
+  :init
+  (global-set-key (kbd "C-c r a") 'rvm-activate-corresponding-ruby)
   :ensure t)
 (use-package terraform-mode
   :ensure t)
@@ -278,7 +292,6 @@
 (setq inhibit-startup-message t)
 (setq max-lisp-eval-depth 100000)
 (setq max-specpdl-size 100000)
-(setq debug-on-error t)
 (setq hippie-expand-try-functions-list
       '(try-expand-dabbrev
         try-expand-dabbrev-all-buffers
@@ -298,7 +311,17 @@
 (line-number-mode)
 (column-number-mode)
 (delete-selection-mode t)
-(toggle-debug-on-error 1)
+(global-set-key (kbd "S-<right>") 'windmove-right)
+(global-set-key (kbd "S-<left>") 'windmove-left)
+(global-set-key (kbd "S-<up>") 'windmove-up)
+(global-set-key (kbd "S-<down>") 'windmove-down)
+(add-hook 'term-setup-hook
+  '(lambda ()
+     (define-key function-key-map "\e[1;9A" [M-up])
+     (define-key function-key-map "\e[1;9B" [M-down])
+     (define-key function-key-map "\e[1;9C" [M-right])
+     (define-key function-key-map "\e[1;9D" [M-left])))
+(winner-mode 1)
 
 (add-hook 'find-file-hook 'find-file-check-line-endings)
 (defun dos-file-endings-p ()
