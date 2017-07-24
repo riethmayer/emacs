@@ -4,6 +4,7 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
+(add-to-list 'load-path "~/.emacs.d/vendor")
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
@@ -63,6 +64,12 @@
 (use-package docker-tramp
   :ensure t)
 (use-package ess
+  :init
+  (remove-hook 'ess-mode 'flycheck-mode)
+  (add-hook 'ess-mode-hook
+            (lambda ()
+              (setq ess-fancy-comments nil)
+              (ess-toggle-underscore nil)))
   :ensure t)
 (use-package exec-path-from-shell
   :init
@@ -106,7 +113,7 @@
   :init
   (global-company-mode)
   :ensure t)
-(use-package ido-ubiquitous
+(use-package ido-completing-read+
   ;; few ido changes from https://www.masteringemacs.org/article/introduction-to-ido-mode
   :init
   (setq ido-enable-flex-matching t)
@@ -131,13 +138,9 @@
   (require 'poly-R)
   (require 'poly-markdown)
   (add-to-list 'auto-mode-alist
-               '("\\.\\(?:rmd\\|rmarkdown\\|RMD\\)\\'" . poly-markdown+r-mode))
+               '("\\.\\(?:Rmd\\|rmarkdown\\|RMD\\)\\'" . poly-markdown+r-mode))
   :ensure t)
 (use-package markdown-preview-mode
-  :ensure t)
-(use-package monokai-theme
-  :init
-  (load-theme 'monokai t)
   :ensure t)
 (use-package mwim
   :init
@@ -145,6 +148,10 @@
   (global-set-key (kbd "C-e") 'mwim-end-of-code-or-line)
   :ensure t)
 (use-package nginx-mode
+  :ensure t)
+(use-package org-bullets
+  :init
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   :ensure t)
 (use-package paredit
   :ensure t)
@@ -158,6 +165,18 @@
   :ensure t)
 (use-package plantuml-mode
   :init
+  ;; tell org-mode where to find the plantuml JAR file (specify the JAR file)
+  (setq org-plantuml-jar-path (expand-file-name "~/bin/plantuml.jar"))
+  ;; use plantuml as org-babel language
+  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+  ;; helper function
+  (defun my-org-confirm-babel-evaluate (lang body)
+    "Do not ask for confirmation to evaluate code for specified languages."
+    (member lang '("plantuml")))
+  ;; trust certain code as being safe
+  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+  ;; automatically show the resulting image
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
   (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode))
   (add-to-list 'auto-mode-alist '("\\.plu\\'" . plantuml-mode))
   (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
@@ -206,6 +225,12 @@
 (use-package flymake-ruby
   :init
   (add-hook 'ruby-mode-hook 'flymake-ruby-load)
+  :ensure t)
+(use-package rubocop
+  :init
+  (add-hook 'ruby-mode-hook #'rubocop-mode)
+  (require 'reek)
+  (add-hook 'ruby-mode-hook #'reek-mode)
   :ensure t)
 (use-package ruby-mode
   :init
@@ -276,6 +301,7 @@
                 #'endless/fill-or-unfill)
 ;; TODO
 
+
 ;; defaults
 (setq-default tab-width 2)
 (setq-default sh-basic-offset 2)
@@ -316,13 +342,12 @@
 (global-set-key (kbd "S-<up>") 'windmove-up)
 (global-set-key (kbd "S-<down>") 'windmove-down)
 (add-hook 'term-setup-hook
-  '(lambda ()
-     (define-key function-key-map "\e[1;9A" [M-up])
-     (define-key function-key-map "\e[1;9B" [M-down])
-     (define-key function-key-map "\e[1;9C" [M-right])
-     (define-key function-key-map "\e[1;9D" [M-left])))
+          '(lambda ()
+             (define-key function-key-map "\e[1;9A" [M-up])
+             (define-key function-key-map "\e[1;9B" [M-down])
+             (define-key function-key-map "\e[1;9C" [M-right])
+             (define-key function-key-map "\e[1;9D" [M-left])))
 (winner-mode 1)
-
 (add-hook 'find-file-hook 'find-file-check-line-endings)
 (defun dos-file-endings-p ()
   (string-match "dos" (symbol-name buffer-file-coding-system)))
@@ -376,7 +401,25 @@
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c n") 'indent-buffer)
 (global-set-key (kbd "C-x p") 'prev-window)
+(global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
 (global-unset-key (kbd "s-m"))
+
+;; font setup
+
+(when (eq system-type 'darwin)
+
+  ;; default Latin font (e.g. Consolas)
+  (set-face-attribute 'default nil :family "Monaco")
+
+  ;; default font size (point * 10)
+  ;;
+  ;; WARNING!  Depending on the default font,
+  ;; if the size is not supported very well, the frame will be clipped
+  ;; so that the beginning of the buffer may not be visible correctly.
+  (set-face-attribute 'default nil :height 150)
+  ;; you may want to add different for other charset in this way.
+  )
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -385,15 +428,68 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
-   ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(custom-safe-themes
+   ["#272822" "#F92672" "#A6E22E" "#E6DB74" "#66D9EF" "#FD5FF0" "#A1EFE4" "#F8F8F2"])
+ '(compilation-message-face (quote default))
+ '(ess-default-style (quote OWN))
+ '(ess-own-style-list
    (quote
-    ("4156d0da4d9b715c6f7244be34f2622716fb563d185b6facedca2c0985751334" default)))
+    ((ess-indent-offset . 2)
+     (ess-offset-arguments . open-delim)
+     (ess-offset-arguments-newline . prev-call)
+     (ess-offset-block . prev-line)
+     (ess-offset-continued . straight)
+     (ess-align-nested-calls "ifelse")
+     (ess-align-arguments-in-calls "function[   ]*(")
+     (ess-align-continuations-in-calls . t)
+     (ess-align-blocks control-flow)
+     (ess-indent-from-lhs arguments fun-decl-opening)
+     (ess-indent-from-chain-start . t)
+     (ess-indent-with-fancy-comments . t))))
+ '(fci-rule-color "#3C3D37")
+ '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
+ '(highlight-tail-colors
+   (quote
+    (("#3C3D37" . 0)
+     ("#679A01" . 20)
+     ("#4BBEAE" . 30)
+     ("#1DB4D0" . 50)
+     ("#9A8F21" . 60)
+     ("#A75B00" . 70)
+     ("#F309DF" . 85)
+     ("#3C3D37" . 100))))
  '(hl-sexp-background-color "#efebe9")
+ '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (monokai-theme leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters plantuml-mode projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
- '(safe-local-variable-values (quote ((docker-image-name . "rails")))))
+    (monokai-alt-theme rbenv haml-mode reek ruby-reek rubocop leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters plantuml-mode projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
+ '(pos-tip-background-color "#A6E22E")
+ '(pos-tip-foreground-color "#272822")
+ '(safe-local-variable-values (quote ((docker-image-name . "rails"))))
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#F92672")
+     (40 . "#CF4F1F")
+     (60 . "#C26C0F")
+     (80 . "#E6DB74")
+     (100 . "#AB8C00")
+     (120 . "#A18F00")
+     (140 . "#989200")
+     (160 . "#8E9500")
+     (180 . "#A6E22E")
+     (200 . "#729A1E")
+     (220 . "#609C3C")
+     (240 . "#4E9D5B")
+     (260 . "#3C9F79")
+     (280 . "#A1EFE4")
+     (300 . "#299BA6")
+     (320 . "#2896B5")
+     (340 . "#2790C3")
+     (360 . "#66D9EF"))))
+ '(vc-annotate-very-old-color nil)
+ '(visible-bell nil)
+ '(weechat-color-list
+   (unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
