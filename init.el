@@ -407,6 +407,8 @@
 ;; font setup
 
 (when (eq system-type 'darwin)
+  ;; remove tool bar
+  (toggle-tool-bar-mode-from-frame 0)
 
   ;; default Latin font (e.g. Consolas)
   (set-face-attribute 'default nil :family "Monaco")
