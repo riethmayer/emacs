@@ -1,5 +1,12 @@
+;;; package --- Emacs config for Jan Riethmayer
+
+;;; Commentary:
+;; Currently used with carbon Emacs
+
 ;;; installations via packages
 (require 'package)
+;;; Code:
+
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
@@ -98,6 +105,12 @@
                 (append flycheck-disabled-checkers
                         '(json-jsonlist)))
 
+  :ensure t)
+(use-package flymake-ruby
+  :init
+  (add-hook 'ruby-mode-hook 'flymake-ruby-load)
+  :ensure t)
+(use-package gh
   :ensure t)
 (use-package handlebars-mode
   :ensure t)
@@ -222,15 +235,15 @@
   :init
   (yas-global-mode)
   :ensure t)
-(use-package flymake-ruby
-  :init
-  (add-hook 'ruby-mode-hook 'flymake-ruby-load)
-  :ensure t)
 (use-package rubocop
   :init
   (add-hook 'ruby-mode-hook #'rubocop-mode)
   (require 'reek)
   (add-hook 'ruby-mode-hook #'reek-mode)
+  :ensure t)
+(use-package rbenv
+  :init
+  (global-rbenv-mode)
   :ensure t)
 (use-package ruby-mode
   :init
@@ -239,8 +252,6 @@
   (add-to-list 'auto-mode-alist
                '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|Procfile|[rR]akefile\\)\\'" . ruby-mode))
   (setq ruby-deep-indent-paren nil)
-  :ensure t)
-(use-package gh
   :ensure t)
 (use-package gist
   :ensure t)
@@ -430,71 +441,22 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
-   ["#272822" "#F92672" "#A6E22E" "#E6DB74" "#66D9EF" "#FD5FF0" "#A1EFE4" "#F8F8F2"])
- '(compilation-message-face (quote default))
- '(ess-default-style (quote OWN))
- '(ess-own-style-list
+   ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
+ '(custom-safe-themes
    (quote
-    ((ess-indent-offset . 2)
-     (ess-offset-arguments . open-delim)
-     (ess-offset-arguments-newline . prev-call)
-     (ess-offset-block . prev-line)
-     (ess-offset-continued . straight)
-     (ess-align-nested-calls "ifelse")
-     (ess-align-arguments-in-calls "function[   ]*(")
-     (ess-align-continuations-in-calls . t)
-     (ess-align-blocks control-flow)
-     (ess-indent-from-lhs arguments fun-decl-opening)
-     (ess-indent-from-chain-start . t)
-     (ess-indent-with-fancy-comments . t))))
- '(fci-rule-color "#3C3D37")
- '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
- '(highlight-tail-colors
-   (quote
-    (("#3C3D37" . 0)
-     ("#679A01" . 20)
-     ("#4BBEAE" . 30)
-     ("#1DB4D0" . 50)
-     ("#9A8F21" . 60)
-     ("#A75B00" . 70)
-     ("#F309DF" . 85)
-     ("#3C3D37" . 100))))
+    ("4156d0da4d9b715c6f7244be34f2622716fb563d185b6facedca2c0985751334" default)))
  '(hl-sexp-background-color "#efebe9")
- '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (monokai-alt-theme rbenv haml-mode reek ruby-reek rubocop leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters plantuml-mode projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
- '(pos-tip-background-color "#A6E22E")
- '(pos-tip-foreground-color "#272822")
- '(safe-local-variable-values (quote ((docker-image-name . "rails"))))
- '(vc-annotate-background nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#F92672")
-     (40 . "#CF4F1F")
-     (60 . "#C26C0F")
-     (80 . "#E6DB74")
-     (100 . "#AB8C00")
-     (120 . "#A18F00")
-     (140 . "#989200")
-     (160 . "#8E9500")
-     (180 . "#A6E22E")
-     (200 . "#729A1E")
-     (220 . "#609C3C")
-     (240 . "#4E9D5B")
-     (260 . "#3C9F79")
-     (280 . "#A1EFE4")
-     (300 . "#299BA6")
-     (320 . "#2896B5")
-     (340 . "#2790C3")
-     (360 . "#66D9EF"))))
- '(vc-annotate-very-old-color nil)
- '(visible-bell nil)
- '(weechat-color-list
-   (unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
+    (flymake-ruby org-bullets rbenv plantuml-mode monokai-theme leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
+ '(safe-local-variable-values (quote ((docker-image-name . "rails")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(provide 'init)
+
+;;; init.el ends here
