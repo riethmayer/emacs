@@ -70,6 +70,10 @@
   :ensure t)
 (use-package docker-tramp
   :ensure t)
+(use-package dracula-theme
+  :init
+  (load-theme 'dracula t)
+  :ensure t)
 (use-package ess
   :init
   (remove-hook 'ess-mode 'flycheck-mode)
@@ -112,6 +116,64 @@
   :ensure t)
 (use-package gh
   :ensure t)
+
+;; GOLANG
+(use-package go-mode
+  :config (use-package godoctor)
+  :config (use-package go-eldoc)
+  :config (use-package golint
+            :init
+            (add-to-list 'load-path (concat (getenv "GOPATH") "/src/github.com/golang/lint/misc/emacs"))
+            :demand t
+            :ensure t)
+  :config (use-package go-guru
+            :demand t
+            :ensure t)
+  :init
+  (defun go-run-buffer()
+    (interactive)
+    (shell-command (concat "go run " (buffer-name))))
+  (defun go-mode-setup ()
+    ;; setup go-eldoc
+    (go-eldoc-setup)
+    ;; use goimports instead of go-fmt
+    (setq gofmt-command "goimports")
+    ;; Call go-fmt before saving
+    (add-hook 'before-save-hook 'gofmt-before-save)
+    ;; Customize compile command to run go build
+    (if (not (string-match "go" compile-command))
+        (set (make-local-variable 'compile-command)
+             "go build -v && go test -v && go vet && golint"))
+    ;; Godef bindings
+    (local-set-key (kbd "M-.") 'godef-jump)
+    ;; compile
+
+    (define-key (current-local-map) "\C-c\C-c" 'compile)
+    (define-key (current-local-map) "\C-x\C-e" 'go-run-buffer)
+    (define-key (current-local-map) "\C-c\C-r\C-e" 'godoctor-extract)
+    (define-key (current-local-map) "\C-c\C-r\C-r" 'godoctor-rename)
+    (define-key (current-local-map) "\C-c\C-r\C-t" 'godoctor-toggle)
+    (define-key (current-local-map) "\C-c\C-r\C-g" 'godoctor-godoc)
+    (go-guru-hl-identifier-mode)
+    )
+  (add-hook 'go-mode-hook 'go-mode-setup)
+  :ensure t)
+
+(use-package company-go
+  :init
+  (add-hook 'go-mode-hook
+            (lambda ()
+              (set (make-local-variable 'company-backends) '(company-go))
+              (company-mode)))
+  :ensure t)
+(use-package flymake-go
+  :ensure t)
+(use-package flycheck-gometalinter
+  :ensure t
+  :config
+  (progn
+    (flycheck-gometalinter-setup)))
+
 (use-package handlebars-mode
   :ensure t)
 (use-package helm-ag
@@ -412,7 +474,6 @@
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c n") 'indent-buffer)
 (global-set-key (kbd "C-x p") 'prev-window)
-(global-set-key (kbd "M-RET") 'toggle-frame-fullscreen)
 (global-unset-key (kbd "s-m"))
 
 ;; font setup
@@ -440,10 +501,13 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
+ '(custom-safe-themes
+   (quote
+    ("ff7625ad8aa2615eae96d6b4469fcc7d3d20b2e1ebc63b761a349bebbb9d23cb" default)))
  '(hl-sexp-background-color "#efebe9")
  '(package-selected-packages
    (quote
-    (flymake-ruby org-bullets rbenv plantuml-mode monokai-theme leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
+    (theme-dracula dracula-theme godoctor go-guru golint go-lint go-eldoc flycheck-gometalinter flymake-go company-go go-mode vue-html-mode vue-mode flymake-ruby org-bullets rbenv plantuml-mode monokai-theme leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
  '(safe-local-variable-values (quote ((docker-image-name . "rails"))))
