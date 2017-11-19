@@ -478,6 +478,11 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "s-=") 'text-scale-increase)
 (global-set-key (kbd "s--") 'text-scale-decrease)
+(global-set-key
+ (kbd "s-0")
+ (lambda ()
+   (interactive)
+   (text-scale-adjust 0)))
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-c n") 'indent-buffer)
 (global-set-key (kbd "C-x p") 'prev-window)
@@ -493,7 +498,6 @@
   (set-face-attribute 'default nil :family "Monaco")
 
   ;; default font size (point * 10)
-  ;;
   ;; WARNING!  Depending on the default font,
   ;; if the size is not supported very well, the frame will be clipped
   ;; so that the beginning of the buffer may not be visible correctly.
