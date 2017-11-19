@@ -17,7 +17,6 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-
 (use-package ag
   :ensure t)
 (use-package alchemist
@@ -298,11 +297,10 @@
   (yas-global-mode)
   :ensure t)
 (use-package rubocop
+  :ensure t
   :init
-  (add-hook 'ruby-mode-hook #'rubocop-mode)
-  (require 'reek)
-  (add-hook 'ruby-mode-hook #'reek-mode)
-  :ensure t)
+  (add-hook 'ruby-mode-hook 'rubocop-mode)
+  :diminish rubocop-mode)
 (use-package rbenv
   :init
   (global-rbenv-mode)
@@ -340,7 +338,16 @@
   (add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))       ;; JS + JSX
   (add-to-list 'auto-mode-alist '("\\.scss\\'"   . web-mode))       ;; SCSS
   (add-to-list 'auto-mode-alist '("\\.erb\\'"    . web-mode))       ;; ERB
-
+  (defun remove-semi ()
+    (interactive)
+    (save-excursion
+      (goto-char 1)
+      (while (search-forward-regexp ";$" nil t)
+        (replace-match ""))))
+  (defun my-js-save-hook ()
+    (add-hook 'before-save-hook 'remove-semi nil 'make-it-local)
+    (add-hook 'before-save-hook 'whitespace-cleanup nil 'make-it-local))
+  (add-hook 'web-mode-hook 'my-js-save-hook)
   (defadvice web-mode-highlight-part (around tweak-jsx activate)
     (if (equal web-mode-content-type "jsx")
         (let ((web-mode-enable-part-face nil))
