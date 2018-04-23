@@ -73,14 +73,6 @@
   :init
   (load-theme 'dracula t)
   :ensure t)
-(use-package ess
-  :init
-  (remove-hook 'ess-mode 'flycheck-mode)
-  (add-hook 'ess-mode-hook
-            (lambda ()
-              (setq ess-fancy-comments nil)
-              (ess-toggle-underscore nil)))
-  :ensure t)
 (use-package exec-path-from-shell
   :init
   (when (memq window-system '(mac ns))
@@ -199,10 +191,6 @@
   :ensure t)
 (use-package json-mode
   :ensure t)
-(use-package less-css-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.css\\'"    . less-css-mode))
-  :ensure t)
 (use-package magit
   :init
   (global-set-key (kbd "C-x g") 'magit-status)
@@ -305,13 +293,22 @@
   :init
   (global-rbenv-mode)
   :ensure t)
-(use-package ruby-mode
+;; switch from ruby-mode
+(use-package enh-ruby-mode
   :init
   (add-to-list 'auto-mode-alist
                '("\\.\\(?:cap\\|gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
   (add-to-list 'auto-mode-alist
                '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|Procfile|[rR]akefile\\)\\'" . ruby-mode))
+  (setq ruby-insert-encoding-magic-comment nil)
   (setq ruby-deep-indent-paren nil)
+  :ensure t)
+(use-package robe
+  :init
+  (add-hook 'ruby-mode-hook 'robe-mode)
+  (eval-after-load 'company
+    '(push 'company-robe company-backends))
+  (add-hook 'robe-mode-hook 'ac-robe-setup)
   :ensure t)
 (use-package gist
   :ensure t)
@@ -332,20 +329,15 @@
    web-mode-enable-css-colorization t
    web-mode-markup-indent-offset 2
    web-mode-engines-alist '(("blade"  . "\\.blade\\.")))
-  (add-to-list 'auto-mode-alist '("\\.erb\\'"   . web-mode))        ;; ERB
+  (add-to-list 'auto-mode-alist
+               '("\\.html.erb\\'" . (lambda ()
+                                      (web-mode)
+                                      (flycheck-mode -1))))
   (add-to-list 'auto-mode-alist '("\\.es6\\'"    . web-mode))       ;; ES6
   (add-to-list 'auto-mode-alist '("\\.html?\\'"  . web-mode))       ;; Plain HTML
   (add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))       ;; JS + JSX
   (add-to-list 'auto-mode-alist '("\\.scss\\'"   . web-mode))       ;; SCSS
-  (add-to-list 'auto-mode-alist '("\\.erb\\'"    . web-mode))       ;; ERB
-  (defun remove-semi ()
-    (interactive)
-    (save-excursion
-      (goto-char 1)
-      (while (search-forward-regexp ";$" nil t)
-        (replace-match ""))))
   (defun my-js-save-hook ()
-    (add-hook 'before-save-hook 'remove-semi nil 'make-it-local)
     (add-hook 'before-save-hook 'whitespace-cleanup nil 'make-it-local))
   (add-hook 'web-mode-hook 'my-js-save-hook)
   (defadvice web-mode-highlight-part (around tweak-jsx activate)
@@ -518,7 +510,7 @@
  '(hl-sexp-background-color "#efebe9")
  '(package-selected-packages
    (quote
-    (theme-dracula dracula-theme godoctor go-guru golint go-lint go-eldoc flycheck-gometalinter flymake-go company-go go-mode vue-html-mode vue-mode flymake-ruby org-bullets rbenv plantuml-mode monokai-theme leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
+    (enh-ruby-mode robe theme-dracula dracula-theme godoctor go-guru golint go-lint go-eldoc flycheck-gometalinter flymake-go company-go go-mode vue-html-mode vue-mode flymake-ruby org-bullets rbenv plantuml-mode monokai-theme leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
  '(safe-local-variable-values (quote ((docker-image-name . "rails"))))
