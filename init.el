@@ -6,17 +6,19 @@
 ;;; installations via packages
 (require 'package)
 ;;; Code:
-
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
+
 (add-to-list 'load-path "~/.emacs.d/vendor")
+(add-to-list 'load-path "~/.emacs.d/customs")
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
 (use-package ag
   :ensure t)
 (use-package alchemist
@@ -28,8 +30,6 @@
 (use-package ansible
   :init
   (add-hook 'yaml-mode-hook '(lambda () (ansible 1)))
-  :ensure t)
-(use-package coffee-mode
   :ensure t)
 (use-package clojure-mode
   :ensure t)
@@ -44,10 +44,6 @@
 (use-package company-ansible
   :init
   (add-to-list 'company-backends 'company-ansible)
-  :ensure t)
-(use-package company-inf-ruby
-  :init
-  (add-to-list 'company-backends 'company-inf-ruby)
   :ensure t)
 (use-package company-jedi
   :init
@@ -82,90 +78,8 @@
   :ensure t)
 (use-package flycheck
   :init
-  ;; http://www.flycheck.org/manual/latest/index.html
-  (require 'flycheck)
-  ;; turn on flychecking globally
-  (add-hook 'after-init-hook #'global-flycheck-mode)
-  ;; disable jshint since we prefer eslint checking
-  (setq-default flycheck-disabled-checkers
-                (append flycheck-disabled-checkers
-                        '(javascript-jshint)))
-  ;; use eslint with web-mode for jsx files
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-  ;; customize flycheck temp file prefix
-  (setq-default flycheck-temp-prefix ".flycheck")
-
-  ;; disable json-jsonlist checking for json files
-  (setq-default flycheck-disabled-checkers
-                (append flycheck-disabled-checkers
-                        '(json-jsonlist)))
-
-  :ensure t)
-(use-package flymake-ruby
-  :init
-  (add-hook 'ruby-mode-hook 'flymake-ruby-load)
   :ensure t)
 (use-package gh
-  :ensure t)
-
-;; GOLANG
-(use-package go-mode
-  :config (use-package godoctor)
-  :config (use-package go-eldoc)
-  :config (use-package golint
-            :init
-            (add-to-list 'load-path (concat (getenv "GOPATH") "/src/github.com/golang/lint/misc/emacs"))
-            :demand t
-            :ensure t)
-  :config (use-package go-guru
-            :demand t
-            :ensure t)
-  :init
-  (defun go-run-buffer()
-    (interactive)
-    (shell-command (concat "go run " (buffer-name))))
-  (defun go-mode-setup ()
-    ;; setup go-eldoc
-    (go-eldoc-setup)
-    ;; use goimports instead of go-fmt
-    (setq gofmt-command "goimports")
-    ;; Call go-fmt before saving
-    (add-hook 'before-save-hook 'gofmt-before-save)
-    ;; Customize compile command to run go build
-    (if (not (string-match "go" compile-command))
-        (set (make-local-variable 'compile-command)
-             "go build -v && go test -v && go vet && golint"))
-    ;; Godef bindings
-    (local-set-key (kbd "M-.") 'godef-jump)
-    ;; compile
-
-    (define-key (current-local-map) "\C-c\C-c" 'compile)
-    (define-key (current-local-map) "\C-x\C-e" 'go-run-buffer)
-    (define-key (current-local-map) "\C-c\C-r\C-e" 'godoctor-extract)
-    (define-key (current-local-map) "\C-c\C-r\C-r" 'godoctor-rename)
-    (define-key (current-local-map) "\C-c\C-r\C-t" 'godoctor-toggle)
-    (define-key (current-local-map) "\C-c\C-r\C-g" 'godoctor-godoc)
-    (go-guru-hl-identifier-mode)
-    )
-  (add-hook 'go-mode-hook 'go-mode-setup)
-  :ensure t)
-
-(use-package company-go
-  :init
-  (add-hook 'go-mode-hook
-            (lambda ()
-              (set (make-local-variable 'company-backends) '(company-go))
-              (company-mode)))
-  :ensure t)
-(use-package flymake-go
-  :ensure t)
-(use-package flycheck-gometalinter
-  :ensure t
-  :config
-  (progn
-    (flycheck-gometalinter-setup)))
-
-(use-package handlebars-mode
   :ensure t)
 (use-package helm-ag
   :init
@@ -189,21 +103,22 @@
   :ensure t)
 (use-package jinja2-mode
   :ensure t)
-(use-package json-mode
-  :ensure t)
 (use-package magit
   :init
   (global-set-key (kbd "C-x g") 'magit-status)
   :ensure t)
-(use-package markdown-mode+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
   :init
-  (require 'poly-R)
-  (require 'poly-markdown)
-  (add-to-list 'auto-mode-alist
-               '("\\.\\(?:Rmd\\|rmarkdown\\|RMD\\)\\'" . poly-markdown+r-mode))
-  :ensure t)
-(use-package markdown-preview-mode
-  :ensure t)
+  (setq markdown-open-command "/Users/riethmayer/bin/mark")
+  (setq markdown-css-paths
+    '("/Applications/Marked 2.app/Contents/Resources/Lopash.css"))
+  (setq markdown-command "multimarkdown")
+  )
 (use-package mwim
   :init
   (global-set-key (kbd "C-a") 'mwim-beginning-of-code-or-line)
@@ -284,79 +199,9 @@
   :init
   (yas-global-mode)
   :ensure t)
-(use-package rubocop
-  :ensure t
-  :init
-  (add-hook 'ruby-mode-hook 'rubocop-mode)
-  :diminish rubocop-mode)
-(use-package rbenv
-  :init
-  (global-rbenv-mode)
-  :ensure t)
-;; switch from ruby-mode
-(use-package enh-ruby-mode
-  :init
-  (add-to-list 'auto-mode-alist
-               '("\\.\\(?:cap\\|gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
-  (add-to-list 'auto-mode-alist
-               '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|Procfile|[rR]akefile\\)\\'" . ruby-mode))
-  (setq ruby-insert-encoding-magic-comment nil)
-  (setq ruby-deep-indent-paren nil)
-  :ensure t)
-(use-package robe
-  :init
-  (add-hook 'ruby-mode-hook 'robe-mode)
-  (eval-after-load 'company
-    '(push 'company-robe company-backends))
-  (add-hook 'robe-mode-hook 'ac-robe-setup)
-  :ensure t)
 (use-package gist
   :ensure t)
-(use-package rvm
-  :init
-  (global-set-key (kbd "C-c r a") 'rvm-activate-corresponding-ruby)
-  :ensure t)
 (use-package terraform-mode
-  :ensure t)
-(use-package web-mode
-  :init
-  (setq-default
-   web-mode-code-indent-offset 2
-   web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")
-                                  ("javascript" . "\\.es6?\\'"))
-   web-mode-css-indent-offset 2
-   web-mode-enable-auto-pairing t
-   web-mode-enable-css-colorization t
-   web-mode-markup-indent-offset 2
-   web-mode-engines-alist '(("blade"  . "\\.blade\\.")))
-  (add-to-list 'auto-mode-alist
-               '("\\.html.erb\\'" . (lambda ()
-                                      (web-mode)
-                                      (flycheck-mode -1))))
-  (add-to-list 'auto-mode-alist '("\\.es6\\'"    . web-mode))       ;; ES6
-  (add-to-list 'auto-mode-alist '("\\.html?\\'"  . web-mode))       ;; Plain HTML
-  (add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))       ;; JS + JSX
-  (add-to-list 'auto-mode-alist '("\\.scss\\'"   . web-mode))       ;; SCSS
-  (defun my-js-save-hook ()
-    (add-hook 'before-save-hook 'whitespace-cleanup nil 'make-it-local))
-  (add-hook 'web-mode-hook 'my-js-save-hook)
-  (defadvice web-mode-highlight-part (around tweak-jsx activate)
-    (if (equal web-mode-content-type "jsx")
-        (let ((web-mode-enable-part-face nil))
-          ad-do-it)
-      ad-do-it))
-
-  (defadvice web-mode-highlight-part (around tweak-jsx activate)
-    (if (equal web-mode-content-type "js")
-        (let ((web-mode-enable-part-face nil))
-          ad-do-it)
-      ad-do-it))
-
-  (with-eval-after-load 'flycheck
-    (setq-default flycheck-disabled-checkers
-                  (append flycheck-disabled-checkers
-                          '(javascript-jshint)))
-    (flycheck-add-mode 'javascript-eslint 'web-mode))
   :ensure t)
 
 (defun endless/fill-or-unfill ()
@@ -371,14 +216,11 @@
 
 (global-set-key [remap fill-paragraph]
                 #'endless/fill-or-unfill)
-;; TODO
-
 
 ;; defaults
 (setq-default tab-width 2)
 (setq-default sh-basic-offset 2)
 (setq-default sh-indentation 2)
-(setq-default js-indent-level 2)
 (setq-default python-indent 4)
 (setq-default indent-tabs-mode nil)
 (setq interprogram-cut-function 'paste-to-osx)
@@ -457,6 +299,17 @@
   (indent-region (point-min) (point-max) nil)
   (untabify (point-min) (point-max)))
 
+;; other configs
+
+;; ruby specific
+(require 'init-ruby)
+
+;; GOLANG
+(require 'init-go)
+
+;; JS setup
+(require 'init-js)
+
 ;; global keybindings
 (global-set-key (kbd "C-w") 'kill-region-or-backward-kill-word)
 (global-set-key (kbd "C-x \\") 'align-regexp)
@@ -510,7 +363,7 @@
  '(hl-sexp-background-color "#efebe9")
  '(package-selected-packages
    (quote
-    (enh-ruby-mode robe theme-dracula dracula-theme godoctor go-guru golint go-lint go-eldoc flycheck-gometalinter flymake-go company-go go-mode vue-html-mode vue-mode flymake-ruby org-bullets rbenv plantuml-mode monokai-theme leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
+    (flycheck-plantuml graphql-mode fish-mode rjsx-mode tide add-node-modules-path prettier-js yard-mode enh-ruby-mode robe theme-dracula dracula-theme godoctor go-guru golint go-lint go-eldoc flycheck-gometalinter flymake-go company-go go-mode vue-html-mode vue-mode flymake-ruby org-bullets rbenv plantuml-mode monokai-theme leuven-theme yasnippet yaml-mode web-mode use-package terraform-mode tagedit spray smex smartparens rainbow-mode rainbow-delimiters projectile-rails polymode php-mode php+-mode paredit org-wunderlist nginx-mode mwim markdown-preview-mode markdown-mode+ magit less-css-mode json-mode js2-mode jinja2-mode ido-ubiquitous helm-projectile helm-company helm-ag handlebars-mode flycheck feature-mode exec-path-from-shell ess dockerfile-mode docker-tramp docker dash-at-point company-web company-jedi company-inf-ruby company-ansible coffee-mode clojure-mode-extra-font-locking cider ansible alchemist ag)))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
  '(safe-local-variable-values (quote ((docker-image-name . "rails"))))
